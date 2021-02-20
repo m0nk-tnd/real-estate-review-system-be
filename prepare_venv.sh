@@ -14,6 +14,8 @@ then
   else
     echo "Install python3-venv before running this script!"
   fi
+else
+  venv_installed=true
 fi
 
 if [ "$venv_installed" = true ]
@@ -31,7 +33,7 @@ then
       echo "Neither venv/bin/activate nor venv/Scripts/activate was found. Skip dependencies installation."
     fi
   fi
-  if [ venv_activated = true ]
+  if [ "$venv_activated" = true ]
   then
     if [[ -f "requirements.txt" ]]
     then
