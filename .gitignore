@@ -1,0 +1,8 @@
+#PyCharm
+.idea/
+
+#DataBase
+db.sqlite3
+
+venv/
+.env
