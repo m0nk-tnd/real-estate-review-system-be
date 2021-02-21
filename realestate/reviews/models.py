@@ -1,3 +1,11 @@
 from django.db import models
 
-# Create your models here.
+from .testimonials import Review
+
+
+class TenantReview(Review):
+    pass
+
+
+class LandlordReview(Review):
+    pass
