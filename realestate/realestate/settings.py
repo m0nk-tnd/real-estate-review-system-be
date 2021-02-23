@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_nose',
     'property',
+    'users',
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
