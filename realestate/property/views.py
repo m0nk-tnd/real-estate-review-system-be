@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 
 class PropertyList(generics.ListCreateAPIView):
-    search_fields = ['city__name', 'city__country']
+    search_fields = ['city__name', 'city__country__name']
     filter_backends = (filters.SearchFilter,)
     queryset = Property.objects.all()
     serializer_class = PropertySerializer

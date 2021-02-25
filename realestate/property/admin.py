@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Property, City
+from .models import Property
 
 admin.site.register(Property)
-admin.site.register(City)
+
