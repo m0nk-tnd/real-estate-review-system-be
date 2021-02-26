@@ -3,6 +3,7 @@ from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
 from property.models import Property, City
+from property.factories import CityFactory
 from property.serializers import PropertySerializer
 
 client = Client()
@@ -10,7 +11,7 @@ client = Client()
 
 class PropertyListTest(TestCase):
     def setUp(self):
-        self.city = City.objects.create(name='Moscow', country='Russia')
+        self.city = CityFactory()
         self.property1 = Property.objects.create(name='my property1', address='my address1',
                                                  description='no description1', city=self.city)
         self.property2 = Property.objects.create(name='my property2', address='my address2',
@@ -26,7 +27,7 @@ class PropertyListTest(TestCase):
 
 class PropertyCreateTest(TestCase):
     def setUp(self):
-        self.city = City.objects.create(name='Moscow', country='Russia')
+        self.city = CityFactory()
         self.valid_form = {
             'name': 'my prop',
             'address': 'spb',
@@ -60,7 +61,7 @@ class PropertyCreateTest(TestCase):
 
 class GetSinglePropertyTest(TestCase):
     def setUp(self):
-        self.city = City.objects.create(name='Moscow', country='Russia')
+        self.city = CityFactory()
         self.property = Property.objects.create(name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
 
@@ -80,7 +81,7 @@ class GetSinglePropertyTest(TestCase):
 
 class PropertyUpdateTest(TestCase):
     def setUp(self):
-        self.city = City.objects.create(name='Moscow', country='Russia')
+        self.city = CityFactory()
         self.property = Property.objects.create(name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
         self.valid_form = {
@@ -117,7 +118,7 @@ class PropertyUpdateTest(TestCase):
 
 class PropertyDeleteTest(TestCase):
     def setUp(self):
-        self.city = City.objects.create(name='Moscow', country='Russia')
+        self.city = CityFactory()
         self.property = Property.objects.create(name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
 
