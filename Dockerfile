@@ -1,8 +1,8 @@
 FROM python:3
 
-RUN mkdir /app
-WORKDIR /app
-COPY . /app 
+RUN mkdir /code
+WORKDIR /code
+COPY . /code/ 
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONBUFFERED 1

@@ -4,17 +4,29 @@ services:
     web:
         build: .
         command: python manage.py runserver 0.0.0.0:8000 --noreload
+        volumes: 
+            - ./:/code/
         ports:
             - 8000:8000
         env_file: 
             - ./.env
         depends_on: 
             - db
+    python: 
+        image: python:3.4
+        volumes: 
+            - ./:/code/
+        command: sleep infinity
+        
     db:
         image: postgres
+        volumes:
+            - ./postgres_data:/var/lib/postgresql
         environment: 
             - POSTGRES_USER=admin
             - POSTGRES_PASSWORD=admin
             - POSTGRES_DB=dbase
+
 volumes: 
     postgres_data:
+    
