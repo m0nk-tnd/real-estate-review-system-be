@@ -8,15 +8,19 @@ services:
             - ./:/code/
         ports:
             - 8000:8000
-        env_file: 
-            - ./.env
+        environment: 
+            - SECRET_KEY=foo
+            - DEBUG=1
+            - SQL_ENGINE=django.db.backends.postgresql
+            - SQL_DATABASE=dbase
+            - SQL_USER=admin
+            - SQL_PASSWORD=admin
+            - SQL_HOST=db
+            - SQL_PORT=5432
+            - DATABASE=postgres
         depends_on: 
             - db
-    python: 
-        image: python:3.4
-        volumes: 
-            - ./:/code/
-        command: sleep infinity
+    
         
     db:
         image: postgres
