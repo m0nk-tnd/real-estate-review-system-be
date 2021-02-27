@@ -1,11 +1,14 @@
 from django.test import TestCase
-from property.models import Property
+from property.models import Property, City
+from property.factories import CityFactory
 
 
 class PropertyModelTest(TestCase):
+
     def setUp(self):
+        self.city = CityFactory()
         self.property = Property.objects.create(name='my property', address='my address',
-                                                description='no description', city='SPb')
+                                                description='no description', city=self.city)
 
     def test_name_label(self):
         prop = Property.objects.get(id=1)
@@ -31,11 +34,6 @@ class PropertyModelTest(TestCase):
         prop = Property.objects.get(id=1)
         max_length = prop._meta.get_field('name').max_length
         self.assertEquals(max_length, 150)
-
-    def test_city_max_length(self):
-        prop = Property.objects.get(id=1)
-        max_length = prop._meta.get_field('city').max_length
-        self.assertEquals(max_length, 255)
 
     def test_str(self):
         prop = Property.objects.get(id=1)
