@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'reviews',
     'rest_framework',
     'django_nose',
-    'rest_framework',
     'property',
     'users',
     'cities_light',

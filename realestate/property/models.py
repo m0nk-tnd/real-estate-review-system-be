@@ -1,6 +1,11 @@
 from django.db import models
-from cities_light.abstract_models import (AbstractCity, AbstractRegion, AbstractCountry, AbstractSubRegion)
+
+from cities_light.abstract_models import (
+    AbstractCity, AbstractRegion, AbstractCountry, AbstractSubRegion
+)
 from cities_light.receivers import connect_default_signals
+
+from users.models import LandlordProfile
 
 
 class Country(AbstractCountry):
@@ -32,7 +37,7 @@ connect_default_signals(City)
 
 
 class Property(models.Model):
-    # landlord = models.ForeignKey(Landlord, related_name='landlord', on_delete=models.CASCADE, null=True, blank=True)
+    landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=150)
     address = models.TextField()
     description = models.TextField()
