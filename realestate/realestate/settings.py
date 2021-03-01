@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'property',
     'cities_light',
-    # 'south',
+    'images',
 ]
 
 CITIES_LIGHT_APP_NAME = 'property'
@@ -147,3 +147,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
