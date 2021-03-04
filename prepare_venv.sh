@@ -12,7 +12,13 @@ then
     python3 -m venv "$venv_dir"
     venv_installed=true
   else
-    echo "Install python3-venv before running this script!"
+    if python -c 'import venv'
+    then
+      python -m venv "$venv_dir"
+      venv_installed=true
+    else
+      echo "Install python3-venv before running this script!"
+    fi
   fi
 else
   venv_installed=true
