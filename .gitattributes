@@ -1,0 +1,5 @@
+# default
+* text=auto
+
+# script for docker
+entrypoint.sh text eol=lf
