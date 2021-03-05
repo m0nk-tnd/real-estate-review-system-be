@@ -63,6 +63,8 @@ SOUTH_MIGRATION_MODULES = {
     'cities_light': 'cities_light.south_migrations',
 }
 
+CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
