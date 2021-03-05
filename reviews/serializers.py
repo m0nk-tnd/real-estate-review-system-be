@@ -5,7 +5,7 @@ from .models import TenantReview, LandlordReview
 class TenantReviewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantReview
-        fields = ['title', 'rating']
+        fields = ['title', 'description', 'rating', 'reviewer', 'review_on']
 
 
 class TenantReviewDetailSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class TenantReviewDetailSerializer(serializers.ModelSerializer):
 class LandlordReviewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandlordReview
-        fields = ['title', 'rating']
+        fields = ['title', 'description', 'rating', 'reviewer', 'review_on']
 
 
 class LandlordReviewDetailSerializer(serializers.ModelSerializer):
