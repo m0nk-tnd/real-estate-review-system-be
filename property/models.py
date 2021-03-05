@@ -1,32 +1,46 @@
 from django.db import models
 from cities_light.abstract_models import (AbstractCity, AbstractRegion, AbstractCountry, AbstractSubRegion)
 from cities_light.receivers import connect_default_signals
-from images.models import ImageAlbum, Image
+from images.models import ImageAlbum
+
+
+class IncludedManager(models.Manager):
+    def get_queryset(self):
+        return super(IncludedManager, self).get_queryset().filter(included=True)
 
 
 class Country(AbstractCountry):
-    pass
+    included = models.BooleanField(default=False)
+    objects = models.Manager()
+    objects_included = IncludedManager()
 
 
 connect_default_signals(Country)
 
 
 class Region(AbstractRegion):
-    pass
+    included = models.BooleanField(default=False)
+    objects = models.Manager()
+    objects_included = IncludedManager()
 
 
 connect_default_signals(Region)
 
 
 class SubRegion(AbstractSubRegion):
-    pass
+    included = models.BooleanField(default=False)
+    objects = models.Manager()
+    objects_included = IncludedManager()
 
 
 connect_default_signals(SubRegion)
 
 
 class City(AbstractCity):
+    included = models.BooleanField(default=False)
     timezone = models.CharField(max_length=40)
+    objects = models.Manager()
+    objects_included = IncludedManager()
 
 
 connect_default_signals(City)
