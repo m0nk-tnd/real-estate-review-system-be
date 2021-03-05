@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (
+from users.views import (
     TenantProfileCreateView, TenantProfileListView, TenantProfileDetailView,
     LandlordProfileCreateView, LandlordProfileListView, LandlordProfileDetailView,
 )
