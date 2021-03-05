@@ -1,8 +1,7 @@
-from property.models import Property, City
+from .models import Property
 from property.serializers import PropertySerializer
 from rest_framework import generics
-from rest_framework import status, filters
-from rest_framework.response import Response
+from rest_framework import filters
 
 
 class PropertyList(generics.ListCreateAPIView):
