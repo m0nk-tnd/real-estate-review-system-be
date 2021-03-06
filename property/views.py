@@ -3,6 +3,7 @@ from property.serializers import PropertySerializer
 from rest_framework import generics
 from rest_framework import status, filters
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated 
 
 
 class PropertyList(generics.ListCreateAPIView):
@@ -12,6 +13,8 @@ class PropertyList(generics.ListCreateAPIView):
     serializer_class = PropertySerializer
 
 
+
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
+    permission_classes = (IsAuthenticated,)

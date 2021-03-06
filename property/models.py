@@ -39,6 +39,6 @@ class Property(models.Model):
     description = models.TextField()
     city = models.ForeignKey(City, related_name='city', on_delete=models.CASCADE, blank=True, null=True)
     album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, blank=True, null=True)
-
+    
     def __str__(self):
         return f"{self.name} | {self.city}"
