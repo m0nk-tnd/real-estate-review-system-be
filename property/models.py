@@ -4,43 +4,43 @@ from cities_light.receivers import connect_default_signals
 from images.models import ImageAlbum
 
 
-class IncludedManager(models.Manager):
+class EnabledObjectManager(models.Manager):
     def get_queryset(self):
-        return super(IncludedManager, self).get_queryset().filter(included=True)
+        return super(EnabledObjectManager, self).get_queryset().filter(enabled=True)
 
 
 class Country(AbstractCountry):
-    included = models.BooleanField(default=False)
-    objects = models.Manager()
-    objects_included = IncludedManager()
+    enabled = models.BooleanField(default=False)
+    all_objects = models.Manager()
+    objects = EnabledObjectManager()
 
 
 connect_default_signals(Country)
 
 
 class Region(AbstractRegion):
-    included = models.BooleanField(default=False)
-    objects = models.Manager()
-    objects_included = IncludedManager()
+    enabled = models.BooleanField(default=False)
+    all_objects = models.Manager()
+    objects = EnabledObjectManager()
 
 
 connect_default_signals(Region)
 
 
 class SubRegion(AbstractSubRegion):
-    included = models.BooleanField(default=False)
-    objects = models.Manager()
-    objects_included = IncludedManager()
+    enabled = models.BooleanField(default=False)
+    all_objects = models.Manager()
+    objects = EnabledObjectManager()
 
 
 connect_default_signals(SubRegion)
 
 
 class City(AbstractCity):
-    included = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=False)
     timezone = models.CharField(max_length=40)
-    objects = models.Manager()
-    objects_included = IncludedManager()
+    all_objects = models.Manager()
+    objects = EnabledObjectManager()
 
 
 connect_default_signals(City)
