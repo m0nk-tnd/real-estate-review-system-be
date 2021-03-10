@@ -11,8 +11,10 @@ then
     echo "PostgreSQL started"
 fi
 
-python manage.py flush --no-input
 python manage.py migrate
+
+echo "Downloading cities_light data and importing to DB..."
+python manage.py cities_light -v 1 --progress
 
 echo "DB upgraded"
 exec "$@"
