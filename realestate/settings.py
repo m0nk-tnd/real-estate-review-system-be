@@ -59,10 +59,6 @@ CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC',
                                    'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT']
 
-SOUTH_MIGRATION_MODULES = {
-    'cities_light': 'cities_light.south_migrations',
-}
-
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
 
 REST_FRAMEWORK = {
