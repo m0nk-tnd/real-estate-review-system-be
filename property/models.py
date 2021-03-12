@@ -5,19 +5,18 @@ from cities_light.abstract_models import (
 )
 from cities_light.receivers import connect_default_signals
 from images.models import ImageAlbum
+from users.models import LandlordProfile
 
 
 class EnabledObjectManager(models.Manager):
     def get_queryset(self):
         return super(EnabledObjectManager, self).get_queryset().filter(enabled=True)
 
-from users.models import LandlordProfile
-
 
 class Country(AbstractCountry):
     enabled = models.BooleanField(default=False)
-    all_objects = models.Manager()
-    objects = EnabledObjectManager()
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(Country)
@@ -25,8 +24,8 @@ connect_default_signals(Country)
 
 class Region(AbstractRegion):
     enabled = models.BooleanField(default=False)
-    all_objects = models.Manager()
-    objects = EnabledObjectManager()
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(Region)
@@ -34,8 +33,8 @@ connect_default_signals(Region)
 
 class SubRegion(AbstractSubRegion):
     enabled = models.BooleanField(default=False)
-    all_objects = models.Manager()
-    objects = EnabledObjectManager()
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(SubRegion)
@@ -44,15 +43,15 @@ connect_default_signals(SubRegion)
 class City(AbstractCity):
     enabled = models.BooleanField(default=False)
     timezone = models.CharField(max_length=40)
-    all_objects = models.Manager()
-    objects = EnabledObjectManager()
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(City)
 
 
 class Property(models.Model):
-    landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True)
+    landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=150)
     address = models.TextField()
     description = models.TextField()
