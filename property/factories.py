@@ -1,5 +1,5 @@
 import factory
-from property.models import City, Country
+from .models import City, Country
 
 
 class CountryFactory(factory.django.DjangoModelFactory):
