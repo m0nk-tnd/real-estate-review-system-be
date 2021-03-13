@@ -92,7 +92,3 @@ class TenantProfileDeleteTest(APITestCase):
         response = self.client.delete(f'/profile/tenant/{self.tenant.pk}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(TenantProfile.objects.all().count(), 0)
-
-    def test_delete_nonexistent_tenant_profile(self) -> None:
-        response = self.client.delete('/profile/tenant/2')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
