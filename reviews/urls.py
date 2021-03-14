@@ -5,12 +5,14 @@ from .views import (
     LandlordReviewListView, LandlordReviewCreateView, LandlordReviewDetailView
 )
 
-urlpatterns = [
-    path('tenant/reviews', TenantReviewListView.as_view()),
-    path('tenant/review/create', TenantReviewCreateView.as_view()),
-    path('tenant/review/<int:pk>', TenantReviewDetailView.as_view()),
+app_name = 'reviews'
 
-    path('landlord/reviews', LandlordReviewListView.as_view()),
-    path('landlord/review/create', LandlordReviewCreateView.as_view()),
-    path('landlord/review/<int:pk>', LandlordReviewDetailView.as_view()),
+urlpatterns = [
+    path('tenant/reviews', TenantReviewListView.as_view(), name='list-tenant-review'),
+    path('tenant/review/create', TenantReviewCreateView.as_view(), name='create-tenant-review'),
+    path('tenant/review/<int:pk>', TenantReviewDetailView.as_view(), name='delete-update-retrieve-tenant-review'),
+
+    path('landlord/reviews', LandlordReviewListView.as_view(), name='list-landlord-review'),
+    path('landlord/review/create', LandlordReviewCreateView.as_view(), name='create-landlord-review'),
+    path('landlord/review/<int:pk>', LandlordReviewDetailView.as_view(), name='delete-update-retrieve-landlord-review'),
 ]
