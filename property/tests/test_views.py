@@ -68,7 +68,7 @@ class GetSinglePropertyTest(TestCase):
     def test_get_valid_property(self):
         response = client.get(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}))
-        prop = Property.objects.get(id=1)
+        prop = Property.objects.get(id=self.property.id)
         serializer = PropertySerializer(prop)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -104,7 +104,7 @@ class PropertyUpdateTest(TestCase):
             data=json.dumps(self.valid_form),
             content_type='application/json'
         )
-        prop = Property.objects.get(id=1)
+        prop = Property.objects.get(id=self.property.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(prop.name, 'my prop')
 
