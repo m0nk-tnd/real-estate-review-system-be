@@ -4,41 +4,54 @@ from cities_light.abstract_models import (
     AbstractCity, AbstractRegion, AbstractCountry, AbstractSubRegion
 )
 from cities_light.receivers import connect_default_signals
-from images.models import ImageAlbum, Image
-
+from images.models import ImageAlbum
 from users.models import LandlordProfile
 
 
+class EnabledObjectManager(models.Manager):
+    def get_queryset(self):
+        return super(EnabledObjectManager, self).get_queryset().filter(enabled=True)
+
+
 class Country(AbstractCountry):
-    pass
+    enabled = models.BooleanField(default=False)
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(Country)
 
 
 class Region(AbstractRegion):
-    pass
+    enabled = models.BooleanField(default=False)
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(Region)
 
 
 class SubRegion(AbstractSubRegion):
-    pass
+    enabled = models.BooleanField(default=False)
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(SubRegion)
 
 
 class City(AbstractCity):
+    enabled = models.BooleanField(default=False)
     timezone = models.CharField(max_length=40)
+    included_objects = EnabledObjectManager()
+    objects = models.Manager()
 
 
 connect_default_signals(City)
 
 
 class Property(models.Model):
-    landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, null=True)
+    landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=150)
     address = models.TextField()
     description = models.TextField()

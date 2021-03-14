@@ -31,7 +31,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY') or 'def_secret_key'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=1))
 
-ALLOWED_HOSTS =  ['127.0.0.1', 'localhost', '[::1]']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
 
 
 # Application definition
@@ -60,9 +60,7 @@ CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
 CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC',
                                    'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT']
 
-SOUTH_MIGRATION_MODULES = {
-    'cities_light': 'cities_light.south_migrations',
-}
+CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [],
@@ -73,6 +71,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -153,7 +152,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
