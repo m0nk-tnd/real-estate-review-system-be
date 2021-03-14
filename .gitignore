@@ -11,3 +11,5 @@ media/
 __pycache__\
 *.pyc
 *.pyo
+.jython_cache\
+*.pkc

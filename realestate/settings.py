@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'def_secret_key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = int(os.environ.get('DEBUG', default=1))
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'users',
     'cities_light',
     'images',
+    'rest_framework_jwt',
 ]
 
 CITIES_LIGHT_APP_NAME = 'property'
@@ -158,3 +159,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+       'rest_framework.permissions.AllowAny',
+    ),
+}
