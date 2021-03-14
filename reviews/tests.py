@@ -1,6 +1,8 @@
 from django.urls import reverse
+from django.contrib.auth.models import User
+
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, force_authenticate
 
 from .serializers import (
     TenantReviewDetailSerializer, TenantReviewListSerializer,
@@ -13,6 +15,8 @@ class TenantReviewTestCases(APITestCase):
     def setUp(self) -> None:
         self.data = {'title': 'title', 'description': 'description', 'rating': 4}
         self.incorrect_data = {'title': 'title', 'description': 'description', 'rating': 0}
+        self.client_ = User.objects.create_user(username='test', password='12345')
+        self.client.login(username='test', password='12345')
 
     def test_create_tenant_review(self):
         response = self.client.post(reverse('reviews:create-tenant-review'), self.data)
@@ -39,6 +43,7 @@ class TenantReviewTestCases(APITestCase):
         new_data = {'description': 'really_new_description', 'rating': 5}
         response = self.client.patch(reverse('reviews:delete-update-retrieve-tenant-review',
                                              kwargs={'pk': tenant_review.pk}), data=new_data)
+
         self.assertEqual(response.data['description'], new_data['description'])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

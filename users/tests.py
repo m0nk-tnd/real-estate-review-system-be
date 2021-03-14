@@ -1,5 +1,3 @@
-import json
-
 from django.contrib.auth.models import User
 from django.urls import reverse
 
@@ -26,7 +24,7 @@ class TenantProfileCreateTest(APITestCase):
 
     def test_create_invalid_tenant_profile(self) -> None:
         self.data_.update({'middlename': ''})
-        response = self.client.post(reverse('users:create-tenant'), json.dumps(self.data_))
+        response = self.client.post(reverse('users:create-tenant'), self.data_)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
