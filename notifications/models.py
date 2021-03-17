@@ -31,8 +31,15 @@ class Notification(models.Model):
 def create_notification_review(sender, instance, created, **kwargs):
     if created:
         content = NotificationContent.objects.create(data={
-            'landlord': instance.review_on.landlord.id,
-            'property': instance.review_on.name
+            'landlord_id': instance.review_on.landlord.id,
+            'landlord_first_name': instance.review_on.landlord.firstname,
+            'landlord_last_name': instance.review_on.landlord.lastname,
+            'property_name': instance.review_on.name,
+            'tenant_first_name': instance.reviewer.firstname,
+            'tenant_last_name': instance.reviewer.lastname,
+            'review_title': instance.title,
+            'review_text': instance.description,
+            'review_rating': instance.rating
         })
         notification = Notification.objects.create(content=content, type=NotificationType.REVIEW)
         send_email(content.data, notification.type)
@@ -42,8 +49,14 @@ def create_notification_review(sender, instance, created, **kwargs):
 def create_notification_rating(sender, instance, created, **kwargs):
     if created:
         content = NotificationContent.objects.create(data={
-            'rated_user': instance.review_on.id,
-            'landlord': instance.reviewer.id,
+            'rated_user_id': instance.review_on.id,
+            'first_name': instance.review_on.firstname,
+            'last_name': instance.review_on.lastname,
+            'landlord_id': instance.reviewer.id,
+            'landlord_first_name': instance.reviewer.landlord.firstname,
+            'landlord_last_name': instance.reviewer.landlord.lastname,
+            'review_title': instance.title,
+            'review_text': instance.description,
             'rating': instance.rating
         })
         notification = Notification.objects.create(content=content, type=NotificationType.RATING)
