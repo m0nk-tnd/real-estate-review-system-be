@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'cities_light',
     'images',
     'rest_framework_jwt',
+    'notifications',
 ]
 
 CITIES_LIGHT_APP_NAME = 'property'
@@ -61,6 +62,10 @@ CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PP
                                    'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT']
 
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
+
+# emails
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/tmp/app-messages'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [

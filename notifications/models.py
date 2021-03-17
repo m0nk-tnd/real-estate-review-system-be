@@ -29,4 +29,4 @@ def create_notification_review(sender, instance, created, **kwargs):
             'property': instance.review_on.name
         })
         Notification.objects.create(content=content, type=NotificationType.REVIEW)
-        # send_email(content.data)
+        send_email(content.data)
