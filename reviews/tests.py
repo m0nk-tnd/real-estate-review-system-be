@@ -32,7 +32,7 @@ class TenantReviewTestCases(APITestCase):
             birth_date='1990-06-28',
         )
         self.prop = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                                 description='no description1', city=self.city)
+                                            description='no description1', city=self.city)
         self.data = {'title': 'title', 'description': 'description', 'rating': 4,
                      'reviewer': self.prop.pk, 'review_on': self.review_on.pk}
         self.incorrect_data = {'title': 'title', 'description': 'description', 'rating': 0}
