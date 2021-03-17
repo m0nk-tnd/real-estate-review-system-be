@@ -42,7 +42,8 @@ def create_notification_review(sender, instance, created, **kwargs):
             'review_rating': instance.rating
         })
         notification = Notification.objects.create(content=content, type=NotificationType.REVIEW)
-        send_email(content.data, notification.type)
+        subject = 'Property review'
+        send_email(content.data, notification.type, subject)
 
 
 @receiver(post_save, sender=TenantReview)
@@ -60,4 +61,5 @@ def create_notification_rating(sender, instance, created, **kwargs):
             'rating': instance.rating
         })
         notification = Notification.objects.create(content=content, type=NotificationType.RATING)
-        send_email(content.data, notification.type)
+        subject = 'Rating'
+        send_email(content.data, notification.type, subject)

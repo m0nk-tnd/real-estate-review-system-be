@@ -1,6 +1,7 @@
 import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core import mail
 from ..models import NotificationType, Notification, NotificationContent
 from reviews.models import LandlordReview, TenantReview
 from users.models import LandlordProfile, TenantProfile
@@ -56,12 +57,17 @@ class NotificationCreationTest(TestCase):
                                                 description='no description', city=self.city)
 
     def test_notification_creation(self):
+        mail.outbox = []
         self.assertEqual(Notification.objects.all().count(), 0)
         LandlordReview.objects.create(reviewer=self.tenant, review_on=self.property,
                                       title='my review', description='cool property',
                                       rating=5)
         self.assertEqual(Notification.objects.all().count(), 1)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Property review')
         TenantReview.objects.create(reviewer=self.property, review_on=self.tenant,
                                     title='my rating', description='cool tenant',
                                     rating=5)
         self.assertEqual(Notification.objects.all().count(), 2)
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, 'Rating')

@@ -64,8 +64,8 @@ CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PP
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
 
 # emails
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = '/tmp/app-messages'
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+# EMAIL_FILE_PATH = '/tmp/app-messages'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [

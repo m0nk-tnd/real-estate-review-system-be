@@ -4,12 +4,12 @@ from django.core import mail
 connection = mail.get_connection()
 
 
-def send_email(content, notification_type):
+def send_email(content, notification_type, subject):
     from .models import notification_templates
     text = render_to_string(notification_templates[notification_type], content)
     connection.open()
     email = mail.EmailMessage(
-        'Review',
+        subject,
         text,
         'from@example.com',
         ['to1@example.com'],
@@ -17,6 +17,3 @@ def send_email(content, notification_type):
     )
     email.send()
     connection.close()
-
-
-
