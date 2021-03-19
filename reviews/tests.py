@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .serializers import TenantReviewListSerializer
+from .serializers import ReviewOnTenantListSerializer
 
-from .models import TenantReview
+from .models import ReviewOnTenant
 from users.models import TenantProfile, LandlordProfile
 from property.models import Property
 
@@ -34,7 +34,7 @@ class TenantReviewTestCases(APITestCase):
         self.data = {'title': 'title', 'description': 'description', 'rating': 4,
                      'reviewer': self.prop.pk, 'review_on': self.review_on.pk}
         self.incorrect_data = {'title': 'title', 'description': 'description', 'rating': 0}
-        self.tenant_review = TenantReview.objects.create(
+        self.tenant_review = ReviewOnTenant.objects.create(
             title=self.data['title'],
             description=self.data['description'],
             rating=self.data['rating'],
@@ -81,7 +81,7 @@ class TenantReviewTestCases(APITestCase):
         self.client.post(reverse('reviews:create-tenant-review'), self.data)
         self.client.post(reverse('reviews:create-tenant-review'), self.data)
         response = self.client.get(reverse('reviews:list-tenant-review'))
-        reviews = TenantReview.objects.all()
-        serializer = TenantReviewListSerializer(reviews, many=True)
+        reviews = ReviewOnTenant.objects.all()
+        serializer = ReviewOnTenantListSerializer(reviews, many=True)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

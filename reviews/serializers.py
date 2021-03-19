@@ -1,26 +1,26 @@
 from rest_framework import serializers
-from .models import TenantReview, LandlordReview
+from .models import ReviewOnTenant, ReviewOnLandlordProperty
 
 
-class TenantReviewListSerializer(serializers.ModelSerializer):
+class ReviewOnTenantListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TenantReview
+        model = ReviewOnTenant
         fields = ['title', 'description', 'rating', 'reviewer', 'review_on']
 
 
-class TenantReviewDetailSerializer(serializers.ModelSerializer):
+class ReviewOnTenantDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TenantReview
+        model = ReviewOnTenant
         fields = '__all__'
 
 
-class LandlordReviewListSerializer(serializers.ModelSerializer):
+class ReviewOnLandlordPropertyListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LandlordReview
+        model = ReviewOnLandlordProperty
         fields = ['title', 'description', 'rating', 'reviewer', 'review_on']
 
 
-class LandlordReviewDetailSerializer(serializers.ModelSerializer):
+class ReviewOnLandlordPropertyDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LandlordReview
+        model = ReviewOnLandlordProperty
         fields = '__all__'
