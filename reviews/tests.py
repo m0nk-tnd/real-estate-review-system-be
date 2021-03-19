@@ -9,14 +9,12 @@ from .serializers import TenantReviewListSerializer
 from .models import TenantReview
 from users.models import TenantProfile, LandlordProfile
 from property.models import Property
-from property.factories import CityFactory
 
 
 class TenantReviewTestCases(APITestCase):
     def setUp(self) -> None:
         self.client_ = User.objects.create_user(username='test', password='12345')
         self.client1_ = User.objects.create_user(username='test1', password='12345')
-        self.city = CityFactory()
         self.review_on = TenantProfile.objects.create(
             user=self.client_,
             firstname='Name',
@@ -32,7 +30,7 @@ class TenantReviewTestCases(APITestCase):
             birth_date='1990-06-28',
         )
         self.prop = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                            description='no description1', city=self.city)
+                                            description='no description1')
         self.data = {'title': 'title', 'description': 'description', 'rating': 4,
                      'reviewer': self.prop.pk, 'review_on': self.review_on.pk}
         self.incorrect_data = {'title': 'title', 'description': 'description', 'rating': 0}
