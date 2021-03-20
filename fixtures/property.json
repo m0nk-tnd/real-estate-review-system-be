@@ -1,0 +1,138 @@
+[
+{
+  "model": "property.country",
+  "pk": 3,
+  "fields": {
+    "name": "Russia",
+    "name_ascii": "Russia",
+    "slug": "russia",
+    "geoname_id": null,
+    "alternate_names": "Russian Federation",
+    "code2": "12",
+    "code3": "012",
+    "continent": "AS",
+    "tld": "qwe",
+    "phone": "+7",
+    "enabled": true
+  }
+},
+{
+  "model": "property.country",
+  "pk": 4,
+  "fields": {
+    "name": "Kazakhstan",
+    "name_ascii": "Kazakhstan",
+    "slug": "kazakhstan",
+    "geoname_id": null,
+    "alternate_names": "",
+    "code2": "89",
+    "code3": "89",
+    "continent": "AS",
+    "tld": "",
+    "phone": "+7",
+    "enabled": true
+  }
+},
+{
+  "model": "property.city",
+  "pk": 2,
+  "fields": {
+    "name": "Orenburg",
+    "name_ascii": "Orenburg",
+    "slug": "orenburg",
+    "geoname_id": null,
+    "alternate_names": "",
+    "display_name": "Orenburg, Russia",
+    "search_names": "orenburgrussia orenburgrussianfederation",
+    "latitude": null,
+    "longitude": null,
+    "subregion": null,
+    "region": null,
+    "country": 3,
+    "population": null,
+    "feature_code": null,
+    "enabled": true,
+    "timezone": "GMT+5"
+  }
+},
+{
+  "model": "property.city",
+  "pk": 3,
+  "fields": {
+    "name": "Karaganda",
+    "name_ascii": "Karaganda",
+    "slug": "karaganda",
+    "geoname_id": null,
+    "alternate_names": "",
+    "display_name": "Karaganda, Kazakhstan",
+    "search_names": "karagandakazakhstan",
+    "latitude": null,
+    "longitude": null,
+    "subregion": null,
+    "region": null,
+    "country": 4,
+    "population": null,
+    "feature_code": null,
+    "enabled": true,
+    "timezone": "GMT+6"
+  }
+},
+{
+  "model": "property.city",
+  "pk": 6,
+  "fields": {
+    "name": "Томск",
+    "name_ascii": "Tomsk",
+    "slug": "tomsk",
+    "geoname_id": null,
+    "alternate_names": "",
+    "display_name": "Томск, Russia",
+    "search_names": "tomskrussia tomskrussianfederation",
+    "latitude": null,
+    "longitude": null,
+    "subregion": null,
+    "region": null,
+    "country": 3,
+    "population": null,
+    "feature_code": null,
+    "enabled": true,
+    "timezone": "GMT+7"
+  }
+},
+{
+  "model": "property.property",
+  "pk": 1,
+  "fields": {
+    "landlord": 1,
+    "name": "Вилла",
+    "address": "ул. Шевченко; дом 89",
+    "description": "большой, просторный, светлый",
+    "city": 6,
+    "album": 1
+  }
+},
+{
+  "model": "property.property",
+  "pk": 2,
+  "fields": {
+    "landlord": 2,
+    "name": "Дом",
+    "address": "Оренбургская область; г. Соль-Илецк; ул. Антонова; д. 111/a;",
+    "description": "Домик с гаражом на просторной улице",
+    "city": 2,
+    "album": 2
+  }
+},
+{
+  "model": "property.property",
+  "pk": 3,
+  "fields": {
+    "landlord": 1,
+    "name": "Вилла синяя",
+    "address": "Караганда;  улица Баумана; дом 34",
+    "description": "двухэтажный",
+    "city": 3,
+    "album": null
+  }
+}
+]
