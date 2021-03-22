@@ -2,40 +2,40 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import (
-    TenantReviewDetailSerializer, TenantReviewListSerializer,
-    LandlordReviewListSerializer, LandlordReviewDetailSerializer,
+    ReviewOnTenantListSerializer, ReviewOnTenantDetailSerializer,
+    ReviewOnLandlordPropertyListSerializer, ReviewOnLandlordPropertyDetailSerializer,
 )
 
-from .models import TenantReview, LandlordReview
+from .models import ReviewOnTenant, ReviewOnLandlordProperty
 
 
-class TenantReviewCreateView(generics.CreateAPIView):
-    serializer_class = TenantReviewDetailSerializer
+class ReviewOnTenantCreateView(generics.CreateAPIView):
+    serializer_class = ReviewOnTenantDetailSerializer
     permission_classes = (IsAuthenticated, )
 
 
-class TenantReviewListView(generics.ListAPIView):
-    serializer_class = TenantReviewListSerializer
-    queryset = TenantReview.objects.all()
+class ReviewOnTenantListView(generics.ListAPIView):
+    serializer_class = ReviewOnTenantListSerializer
+    queryset = ReviewOnTenant.objects.all()
     
 
-class TenantReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = TenantReviewDetailSerializer
-    queryset = TenantReview.objects.all()
-   # permission_classes = (IsAuthenticated, )
+class ReviewOnTenantDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ReviewOnTenantDetailSerializer
+    queryset = ReviewOnTenant.objects.all()
+    # permission_classes = (IsAuthenticated, )
 
 
-class LandlordReviewCreateView(generics.CreateAPIView):
-    serializer_class = LandlordReviewDetailSerializer
-   # permission_classes = (IsAuthenticated, )
+class ReviewOnLandlordPropertyCreateView(generics.CreateAPIView):
+    serializer_class = ReviewOnLandlordPropertyDetailSerializer
+    # permission_classes = (IsAuthenticated, )
 
 
-class LandlordReviewListView(generics.ListAPIView):
-    serializer_class = LandlordReviewListSerializer
-    queryset = LandlordReview.objects.all()
+class ReviewOnLandlordPropertyListView(generics.ListAPIView):
+    serializer_class = ReviewOnLandlordPropertyListSerializer
+    queryset = ReviewOnLandlordProperty.objects.all()
 
 
-class LandlordReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = LandlordReviewDetailSerializer
-    queryset = LandlordReview.objects.all()
-   # permission_classes = (IsAuthenticated, )
+class ReviewOnLandlordPropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ReviewOnLandlordPropertyDetailSerializer
+    queryset = ReviewOnLandlordProperty.objects.all()
+    # permission_classes = (IsAuthenticated, )

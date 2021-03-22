@@ -17,11 +17,11 @@ class TenantProfile(BaseUserProfile):
     pass
 
     def __str__(self):
-        return f'Tenant - {self.firstname} {self.lastname}'
+        return f'{self.firstname} {self.lastname}'
 
 
 class LandlordProfile(BaseUserProfile):
     pass
 
     def __str__(self):
-        return f'Landlord - {self.firstname} {self.lastname}'
+        return f'{self.firstname} {self.lastname}'

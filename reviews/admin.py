@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TenantReview, LandlordReview
+from .models import ReviewOnTenant, ReviewOnLandlordProperty
 
-admin.site.register(TenantReview)
-admin.site.register(LandlordReview)
+admin.site.register(ReviewOnTenant)
+admin.site.register(ReviewOnLandlordProperty)
