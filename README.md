@@ -7,3 +7,5 @@ To start the project using Docker you should use command ```docker-compose up```
 To start the project locally you should run the ```prepare_venv.sh``` script, then execute commands
 ```python manage.py migrate``` and ```python manage.py cities_light``` to download django-cities-light data.
 
+To test the project with fixtures you should use ```$ python manage.py loaddata fixtures/*.json``` to load first data.
+
