@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from reviews.models import LandlordReview, TenantReview
+from reviews.models import ReviewOnLandlordProperty, ReviewOnTenant
 from .views import send_email
 
 
@@ -27,7 +27,7 @@ class Notification(models.Model):
     content = models.OneToOneField(NotificationContent, related_name='notification', on_delete=models.CASCADE)
 
 
-@receiver(post_save, sender=LandlordReview)
+@receiver(post_save, sender=ReviewOnLandlordProperty)
 def create_notification_review(sender, instance, created, **kwargs):
     if created:
         content = NotificationContent.objects.create(data={
@@ -46,7 +46,7 @@ def create_notification_review(sender, instance, created, **kwargs):
         send_email(content.data, notification.type, subject)
 
 
-@receiver(post_save, sender=TenantReview)
+@receiver(post_save, sender=ReviewOnTenant)
 def create_notification_rating(sender, instance, created, **kwargs):
     if created:
         content = NotificationContent.objects.create(data={
