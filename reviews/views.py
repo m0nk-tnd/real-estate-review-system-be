@@ -22,12 +22,12 @@ class ReviewOnTenantListView(generics.ListAPIView):
 class ReviewOnTenantDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewOnTenantDetailSerializer
     queryset = ReviewOnTenant.objects.all()
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
 
 class ReviewOnLandlordPropertyCreateView(generics.CreateAPIView):
     serializer_class = ReviewOnLandlordPropertyDetailSerializer
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
 
 
 class ReviewOnLandlordPropertyListView(generics.ListAPIView):
@@ -38,4 +38,4 @@ class ReviewOnLandlordPropertyListView(generics.ListAPIView):
 class ReviewOnLandlordPropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewOnLandlordPropertyDetailSerializer
     queryset = ReviewOnLandlordProperty.objects.all()
-    permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthenticated, )
