@@ -24,7 +24,8 @@ class NotificationTemplate(models.Model):
 
 
 class Notification(models.Model):
-    template = models.ForeignKey(NotificationTemplate, related_name='notifications', on_delete=models.CASCADE, null=True)
+    template = models.ForeignKey(NotificationTemplate, related_name='notifications', on_delete=models.CASCADE,
+                                 null=True)
     data = models.JSONField(default=dict, null=True)
 
 
@@ -73,3 +74,4 @@ def create_notification(instance, created, notification_type):
         template = NotificationTemplate.objects.get(type=notification_type)
         Notification.objects.create(template=template, data=data)
         return data, template.subject
+    return dict(), ""
