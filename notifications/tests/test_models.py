@@ -2,42 +2,80 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core import mail
-from ..models import NotificationType, Notification, NotificationContent
+from ..models import NotificationType, Notification, NotificationTemplate
 from reviews.models import ReviewOnLandlordProperty, ReviewOnTenant
 from users.models import LandlordProfile, TenantProfile
 from property.models import Property
 from property.factories import CityFactory
 
 
+class NotificationTemplateTest(TestCase):
+    def setUp(self):
+        self.template = NotificationTemplate.objects.get(type=NotificationType.REVIEW)
+
+    def test_type_label(self):
+        field_label = self.template._meta.get_field('type').verbose_name
+        self.assertEquals(field_label, 'type')
+
+    def test_subject_label(self):
+        field_label = self.template._meta.get_field('subject').verbose_name
+        self.assertEquals(field_label, 'subject')
+
+    def test_subject_max_length(self):
+        max_length = self.template._meta.get_field('subject').max_length
+        self.assertEquals(max_length, 255)
+
+
+class NotificationTemplateReviewTest(TestCase):
+    def setUp(self):
+        self.template_review = NotificationTemplate.objects.get(type=NotificationType.REVIEW)
+        self.template_rating = NotificationTemplate.objects.get(type=NotificationType.RATING)
+
+    def test_type_value(self):
+        self.assertEqual(self.template_review.type, NotificationType.REVIEW)
+        self.assertEqual(self.template_rating.type, NotificationType.RATING)
+
+    def test_subject_value(self):
+        self.assertEqual(self.template_review.subject, 'Review')
+        self.assertEqual(self.template_rating.subject, 'Rating')
+
+    def test_email_template_value(self):
+        self.assertEqual(self.template_review.email_template, 'ReviewNotification.html')
+        self.assertEqual(self.template_rating.email_template, 'TenantRatingNotification.html')
+
+    def test_system_template_value(self):
+        self.assertEqual(self.template_review.system_template, 'ReviewNotification.html')
+        self.assertEqual(self.template_rating.system_template, 'TenantRatingNotification.html')
+
+
 class NotificationModelTest(TestCase):
     def setUp(self):
-        self.content = NotificationContent.objects.create(data={
-            'landlord_id': 1,
+        self.data = {
+            'landlord.id': 1,
             'landlord_first_name': 'Anna',
             'landlord_last_name': 'Grigoreva',
             'property_name': 'castle',
+            'tenant_id': 1,
             'tenant_first_name': 'Bob',
             'tenant_last_name': 'Adams',
             'review_title': 'The perfect castle',
             'review_text': 'It is very cool but cold',
-            'review_rating': 5
-        })
-        self.notification = Notification.objects.create(content=self.content, type=NotificationType.REVIEW)
+            'review_rating': 5,
+        }
 
-    def test_content_label(self):
-        notification = Notification.objects.get(id=self.notification.id)
-        field_label = notification._meta.get_field('content').verbose_name
-        self.assertEquals(field_label, 'content')
-
-    def test_type_label(self):
-        notification = Notification.objects.get(id=self.notification.id)
-        field_label = notification._meta.get_field('type').verbose_name
-        self.assertEquals(field_label, 'type')
+        self.notification = Notification.objects.create(
+            data=self.data,
+            template=NotificationTemplate.objects.get(type=NotificationType.REVIEW))
 
     def test_data_label(self):
-        content = NotificationContent.objects.get(id=self.content.id)
-        field_label = content._meta.get_field('data').verbose_name
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('data').verbose_name
         self.assertEquals(field_label, 'data')
+
+    def test_template_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('template').verbose_name
+        self.assertEquals(field_label, 'template')
 
 
 class NotificationCreationTest(TestCase):
@@ -64,7 +102,7 @@ class NotificationCreationTest(TestCase):
                                                 rating=5)
         self.assertEqual(Notification.objects.all().count(), 1)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Property review')
+        self.assertEqual(mail.outbox[0].subject, 'Review')
         ReviewOnTenant.objects.create(reviewer=self.property, review_on=self.tenant,
                                       title='my rating', description='cool tenant',
                                       rating=5)
