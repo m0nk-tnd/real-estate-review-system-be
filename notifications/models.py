@@ -12,54 +12,64 @@ class NotificationType(models.IntegerChoices):
     RATING = 2, _('TenantRatingNotification')
 
 
-notification_templates = {
-    NotificationType.REVIEW: 'review_notification.html',
-    NotificationType.RATING: 'rating_notification.html',
-}
+class NotificationTemplate(models.Model):
+    type = models.IntegerField(choices=NotificationType.choices, default=NotificationType.EMPTY, null=True)
+    subject = models.CharField(max_length=255)
 
+    def _get_template(self):
+        return NotificationType(self.type).label + '.html'
 
-class NotificationContent(models.Model):
-    data = models.JSONField()
+    email_template = property(_get_template)
+    system_template = property(_get_template)
 
 
 class Notification(models.Model):
-    type = models.IntegerField(choices=NotificationType.choices, default=NotificationType.EMPTY)
-    content = models.OneToOneField(NotificationContent, related_name='notification', on_delete=models.CASCADE)
+    template = models.ForeignKey(NotificationTemplate, related_name='notifications', on_delete=models.CASCADE, null=True)
+    data = models.JSONField(default=dict, null=True)
 
 
 @receiver(post_save, sender=ReviewOnLandlordProperty)
 def create_notification_review(sender, instance, created, **kwargs):
-    if created:
-        content = NotificationContent.objects.create(data={
-            'landlord_id': instance.review_on.landlord.id,
-            'landlord_first_name': instance.review_on.landlord.firstname,
-            'landlord_last_name': instance.review_on.landlord.lastname,
-            'property_name': instance.review_on.name,
-            'tenant_first_name': instance.reviewer.firstname,
-            'tenant_last_name': instance.reviewer.lastname,
-            'review_title': instance.title,
-            'review_text': instance.description,
-            'review_rating': instance.rating
-        })
-        notification = Notification.objects.create(content=content, type=NotificationType.REVIEW)
-        subject = 'Property review'
-        send_email(content.data, notification.type, subject)
+    notification_type = NotificationType.REVIEW
+    data, subject = create_notification(instance=instance, created=created, notification_type=notification_type)
+    send_email(data, notification_type, subject)
 
 
 @receiver(post_save, sender=ReviewOnTenant)
 def create_notification_rating(sender, instance, created, **kwargs):
+    notification_type = NotificationType.RATING
+    data, subject = create_notification(instance=instance, created=created, notification_type=notification_type)
+    send_email(data, notification_type, subject)
+
+
+def create_notification(instance, created, notification_type):
     if created:
-        content = NotificationContent.objects.create(data={
-            'rated_user_id': instance.review_on.id,
-            'first_name': instance.review_on.firstname,
-            'last_name': instance.review_on.lastname,
-            'landlord_id': instance.reviewer.id,
-            'landlord_first_name': instance.reviewer.landlord.firstname,
-            'landlord_last_name': instance.reviewer.landlord.lastname,
+        if isinstance(instance, ReviewOnLandlordProperty):
+            landlord = instance.review_on.landlord
+            tenant = instance.reviewer
+            property_instance = instance.review_on
+            email_to = landlord.user.email
+            email_from = tenant.user.email
+        if isinstance(instance, ReviewOnTenant):
+            landlord = instance.reviewer.landlord
+            tenant = instance.review_on
+            property_instance = instance.reviewer
+            email_to = tenant.user.email
+            email_from = landlord.user.email
+        data = {
+            'landlord.id': landlord.id,
+            'landlord_first_name': landlord.firstname,
+            'landlord_last_name': landlord.lastname,
+            'property_name': property_instance.name,
+            'tenant_id': tenant.id,
+            'tenant_first_name': tenant.firstname,
+            'tenant_last_name': tenant.lastname,
             'review_title': instance.title,
             'review_text': instance.description,
-            'rating': instance.rating
-        })
-        notification = Notification.objects.create(content=content, type=NotificationType.RATING)
-        subject = 'Rating'
-        send_email(content.data, notification.type, subject)
+            'review_rating': instance.rating,
+            # 'email_to': email_to,
+            # 'email_from': email_from,
+        }
+        template = NotificationTemplate.objects.get(type=notification_type)
+        Notification.objects.create(template=template, data=data)
+        return data, template.subject

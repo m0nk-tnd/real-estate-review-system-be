@@ -5,8 +5,10 @@ connection = mail.get_connection()
 
 
 def send_email(content, notification_type, subject):
-    from .models import notification_templates
-    text = render_to_string(notification_templates[notification_type], content)
+    from .models import NotificationTemplate
+    template = NotificationTemplate.objects.get(type=notification_type)
+    email_template = template.email_template
+    text = render_to_string(email_template, content)
     connection.open()
     email = mail.EmailMessage(
         subject,

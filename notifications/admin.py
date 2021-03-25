@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Notification, NotificationType, NotificationContent
+from .models import Notification, NotificationTemplate
 
 admin.site.register(Notification)
-admin.site.register(NotificationContent)
+admin.site.register(NotificationTemplate)
