@@ -9,12 +9,7 @@ from .serializers import (
 from .models import ReviewOnTenant, ReviewOnLandlordProperty
 
 
-class ReviewOnTenantCreateView(generics.CreateAPIView):
-    serializer_class = ReviewOnTenantDetailSerializer
-    permission_classes = (IsAuthenticated, )
-
-
-class ReviewOnTenantListView(generics.ListAPIView):
+class ReviewOnTenantListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewOnTenantListSerializer
     queryset = ReviewOnTenant.objects.all()
     
@@ -25,12 +20,7 @@ class ReviewOnTenantDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated, )
 
 
-class ReviewOnLandlordPropertyCreateView(generics.CreateAPIView):
-    serializer_class = ReviewOnLandlordPropertyDetailSerializer
-    permission_classes = (IsAuthenticated, )
-
-
-class ReviewOnLandlordPropertyListView(generics.ListAPIView):
+class ReviewOnLandlordPropertyListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewOnLandlordPropertyListSerializer
     queryset = ReviewOnLandlordProperty.objects.all()
 
