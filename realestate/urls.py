@@ -23,9 +23,9 @@ from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/review/', include('reviews.urls')),
-    path('api/v1/property/', include('property.urls')),
-    path('api/v1/profile/', include('users.urls')),
+    path('api/v1/reviews/', include('reviews.urls')),
+    path('api/v1/properties/', include('property.urls')),
+    path('api/v1/profiles/', include('users.urls')),
     path('login/', obtain_jwt_token),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
