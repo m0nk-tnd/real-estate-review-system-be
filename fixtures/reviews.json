@@ -1,0 +1,57 @@
+[
+{
+  "model": "reviews.tenantreview",
+  "pk": 2,
+  "fields": {
+    "title": "Отличное сотрудничество",
+    "description": "ответственный, дом чист и убран",
+    "rating": 5,
+    "reviewer": 2,
+    "review_on": 1
+  }
+},
+{
+  "model": "reviews.tenantreview",
+  "pk": 3,
+  "fields": {
+    "title": "Забрал ключи",
+    "description": "Замок пришлось заменить, т.к не отдал ключи",
+    "rating": 2,
+    "reviewer": 1,
+    "review_on": 2
+  }
+},
+{
+  "model": "reviews.landlordreview",
+  "pk": 1,
+  "fields": {
+    "title": "Хороший дом",
+    "description": "дом и вправду хорош, никаких проблем не возникло",
+    "rating": 5,
+    "reviewer": 1,
+    "review_on": 2
+  }
+},
+{
+  "model": "reviews.landlordreview",
+  "pk": 2,
+  "fields": {
+    "title": "не отвечал на звонки",
+    "description": "нет ответа",
+    "rating": 1,
+    "reviewer": 1,
+    "review_on": 1
+  }
+},
+{
+  "model": "reviews.landlordreview",
+  "pk": 3,
+  "fields": {
+    "title": "опоздание",
+    "description": "опоздал на встречу",
+    "rating": 2,
+    "reviewer": 2,
+    "review_on": 3
+  }
+}
+]
