@@ -28,5 +28,3 @@ urlpatterns = [
     path('api/v1/profiles/', include('users.urls')),
     path('login/', obtain_jwt_token),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-handler404 = 'realestate.views.handler404'
