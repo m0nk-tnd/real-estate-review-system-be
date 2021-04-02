@@ -7,13 +7,12 @@ from .views import send_email
 
 
 class NotificationType(models.IntegerChoices):
-    EMPTY = 0, _('Empty')
     REVIEW = 1, _('ReviewNotification')
     RATING = 2, _('TenantRatingNotification')
 
 
 class NotificationTemplate(models.Model):
-    type = models.IntegerField(choices=NotificationType.choices, default=NotificationType.EMPTY, null=True)
+    type = models.IntegerField(choices=NotificationType.choices, blank=True)
     subject = models.CharField(max_length=255)
 
     def _get_template(self):
