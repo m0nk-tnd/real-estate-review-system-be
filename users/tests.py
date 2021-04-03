@@ -19,12 +19,12 @@ class TenantProfileCreateTest(APITestCase):
         }
 
     def test_create_tenant_profile(self) -> None:
-        response = self.client.post(reverse('users:create-tenant'), self.data_)
+        response = self.client.post(reverse('users:list-create-tenant'), self.data_)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_tenant_profile(self) -> None:
         self.data_.update({'middlename': ''})
-        response = self.client.post(reverse('users:create-tenant'), self.data_)
+        response = self.client.post(reverse('users:list-create-tenant'), self.data_)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
@@ -49,7 +49,7 @@ class TenantProfileListGetTest(APITestCase):
         self.assertEqual(response.data['firstname'], self.tenant1.firstname)
 
     def test_get_all_existing_tenants_profiles(self) -> None:
-        response = self.client.get(reverse('users:list-tenant'))
+        response = self.client.get(reverse('users:list-create-tenant'))
         self.assertEqual(TenantProfile.objects.all().count(), 2)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

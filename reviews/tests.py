@@ -45,11 +45,11 @@ class TenantReviewTestCases(APITestCase):
         self.client.login(username='test1', password='12345')
 
     def test_create_tenant_review(self):
-        tenant_review = self.client.post(reverse('reviews:create-tenant-review'), self.data)
+        tenant_review = self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
         self.assertEqual(tenant_review.status_code, status.HTTP_201_CREATED)
 
     def test_view_tenant_review(self):
-        response = self.client.get(reverse('reviews:list-tenant-review'))
+        response = self.client.get(reverse('reviews:list-create-tenant-review'))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_certain_tenant_review(self):
@@ -74,13 +74,13 @@ class TenantReviewTestCases(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_review_with_wrong_rating(self):
-        response = self.client.post(reverse('reviews:create-tenant-review'), self.incorrect_data)
+        response = self.client.post(reverse('reviews:list-create-tenant-review'), self.incorrect_data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_tenant_review_list_model_data(self):
-        self.client.post(reverse('reviews:create-tenant-review'), self.data)
-        self.client.post(reverse('reviews:create-tenant-review'), self.data)
-        response = self.client.get(reverse('reviews:list-tenant-review'))
+        self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
+        self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
+        response = self.client.get(reverse('reviews:list-create-tenant-review'))
         reviews = ReviewOnTenant.objects.all()
         serializer = ReviewOnTenantListSerializer(reviews, many=True)
         self.assertEqual(response.data, serializer.data)

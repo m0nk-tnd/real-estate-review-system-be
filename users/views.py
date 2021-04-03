@@ -4,11 +4,7 @@ from users.serializers import TenantProfileSerializer, LandlordProfileSerializer
 from .models import TenantProfile, LandlordProfile
 
 
-class TenantProfileCreateView(generics.CreateAPIView):
-    serializer_class = TenantProfileSerializer
-
-
-class TenantProfileListView(generics.ListAPIView):
+class TenantProfileListCreateView(generics.ListCreateAPIView):
     serializer_class = TenantProfileSerializer
     queryset = TenantProfile.objects.all()
 
@@ -18,11 +14,7 @@ class TenantProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = TenantProfile.objects.all()
 
 
-class LandlordProfileCreateView(generics.CreateAPIView):
-    serializer_class = LandlordProfileSerializer
-
-
-class LandlordProfileListView(generics.ListAPIView):
+class LandlordProfileListCreateView(generics.ListCreateAPIView):
     serializer_class = LandlordProfileSerializer
     queryset = LandlordProfile.objects.all()
 
