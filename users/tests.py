@@ -9,7 +9,7 @@ from .models import TenantProfile
 
 class TenantProfileCreateTest(APITestCase):
     def setUp(self):
-        self.client_ = User.objects.create_user(username='test', password='12345')
+        self.client_ = User.objects.create_user(username='test_username', password='12345')
         self.data_ = {
             'user': self.client_.pk,
             'firstname': 'Name',
@@ -23,7 +23,7 @@ class TenantProfileCreateTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_tenant_profile(self) -> None:
-        self.data_.update({'middlename': ''})
+        self.data_.update({'firstname': ''})
         response = self.client.post(reverse('users:list-create-tenant'), self.data_)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -97,3 +97,30 @@ class TenantProfileDeleteTest(APITestCase):
                                               kwargs={'pk': self.tenant.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(TenantProfile.objects.all().count(), 0)
+
+
+class TenantProfileFilteringTest(APITestCase):
+    fixtures = ['fixtures/users.json']
+
+    def test_birth_date_range(self) -> None:
+        date_from = '1982-01-01'
+        date_until = '1993-01-01'
+        response = self.client.get(reverse('users:list-create-tenant'),
+                                   {'birth_date__range': f'{date_from},{date_until}'})
+        for i in response.data:
+            self.assertGreaterEqual(dict(i)['birth_date'], date_from)
+            self.assertLessEqual(dict(i)['birth_date'], date_until)
+
+    def test_firstname_equality(self) -> None:
+        name = 'Артем'
+        user_in_db = 'Артем Теряев'
+        response = self.client.get(reverse('users:list-create-tenant'), {'firstname': name})
+        user = dict(response.data[0])
+        self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)
+
+    def test_firstname_contains(self) -> None:
+        contains = 'сим'
+        user_in_db = 'Максим Зотов'
+        response = self.client.get(reverse('users:list-create-tenant'), {'firstname__icontains': contains})
+        user = dict(response.data[0])
+        self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)

@@ -6,7 +6,7 @@ class BaseUserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     firstname = models.CharField(max_length=30)
     lastname = models.CharField(max_length=30)
-    middlename = models.CharField(max_length=30)
+    middlename = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(verbose_name='Date of birth')
 
     class Meta:
