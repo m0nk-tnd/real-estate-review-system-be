@@ -1,7 +1,7 @@
 [
 {
-  "model": "reviews.tenantreview",
-  "pk": 2,
+  "model": "reviews.ReviewOnTenant",
+  "pk": 1,
   "fields": {
     "title": "Отличное сотрудничество",
     "description": "ответственный, дом чист и убран",
@@ -11,8 +11,8 @@
   }
 },
 {
-  "model": "reviews.tenantreview",
-  "pk": 3,
+  "model": "reviews.ReviewOnTenant",
+  "pk": 2,
   "fields": {
     "title": "Забрал ключи",
     "description": "Замок пришлось заменить, т.к не отдал ключи",
@@ -21,8 +21,30 @@
     "review_on": 2
   }
 },
+  {
+  "model": "reviews.ReviewOnTenant",
+  "pk": 3,
+  "fields": {
+    "title": "Много шумели",
+    "description": "Шумная парочка, постоянно слушали громкую пузыку и жаловались соседи",
+    "rating": 3,
+    "reviewer": 2,
+    "review_on": 3
+  }
+},
+  {
+  "model": "reviews.ReviewOnTenant",
+  "pk": 4,
+  "fields": {
+    "title": "Чистоплотный",
+    "description": "Прекрасный арендатор, чистоплотный и аккуратный",
+    "rating": 5,
+    "reviewer": 3,
+    "review_on": 2
+  }
+},
 {
-  "model": "reviews.landlordreview",
+  "model": "reviews.ReviewOnLandlordProperty",
   "pk": 1,
   "fields": {
     "title": "Хороший дом",
@@ -33,7 +55,7 @@
   }
 },
 {
-  "model": "reviews.landlordreview",
+  "model": "reviews.ReviewOnLandlordProperty",
   "pk": 2,
   "fields": {
     "title": "не отвечал на звонки",
@@ -44,7 +66,7 @@
   }
 },
 {
-  "model": "reviews.landlordreview",
+  "model": "reviews.ReviewOnLandlordProperty",
   "pk": 3,
   "fields": {
     "title": "опоздание",

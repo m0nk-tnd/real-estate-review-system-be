@@ -85,3 +85,20 @@ class TenantReviewTestCases(APITestCase):
         serializer = ReviewOnTenantListSerializer(reviews, many=True)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class ReviewOnTenantFilteringTest(APITestCase):
+    fixtures = ['fixtures/images.json',
+                'fixtures/users.json',
+                'fixtures/property.json',
+                'fixtures/reviews.json']
+
+    def test_rating_filter(self):
+        response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating': 5})
+        self.assertEqual(len(response.data), 2)
+
+    def test_rating_less_than_equal_filter(self):
+        rating = 3
+        response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating__lte': rating})
+        for i in response.data:
+            self.assertLessEqual(dict(i)['rating'], rating)
