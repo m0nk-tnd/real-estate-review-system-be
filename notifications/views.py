@@ -4,14 +4,16 @@ from django.core import mail
 connection = mail.get_connection()
 
 
-def send_email(content, notification_type, subject):
+def send_email(notification):
     from .models import NotificationTemplate
-    template = NotificationTemplate.objects.get(type=notification_type)
+    template = NotificationTemplate.objects.get(type=notification.template.type)
+    notification.sent = True
+    notification.save()
     email_template = template.email_template
-    text = render_to_string(email_template, content)
+    text = render_to_string(email_template, notification.data)
     connection.open()
     email = mail.EmailMessage(
-        subject,
+        template.subject,
         text,
         'from@example.com',
         ['to1@example.com'],
