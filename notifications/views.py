@@ -5,8 +5,9 @@ connection = mail.get_connection()
 
 
 def send_email(notification):
-    from .models import NotificationTemplate
-    template = NotificationTemplate.objects.get(type=notification.template.type)
+    if notification.sent:
+        return
+    template = notification.template
     notification.sent = True
     notification.save()
     email_template = template.email_template
