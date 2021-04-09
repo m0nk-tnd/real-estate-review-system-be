@@ -79,9 +79,8 @@ class TenantReviewTestCases(APITestCase):
 
     def test_tenant_review_list_model_data(self):
         self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
-        self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
         response = self.client.get(reverse('reviews:list-create-tenant-review'))
         reviews = ReviewOnTenant.objects.all()
         serializer = ReviewOnTenantListSerializer(reviews, many=True)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data['results'], serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
