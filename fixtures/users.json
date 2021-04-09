@@ -47,6 +47,38 @@
       "password": "12345"
     }
   },
+  {
+    "model": "auth.User",
+    "pk": 7,
+    "fields": {
+      "username": "user7",
+      "password": "12345"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 8,
+    "fields": {
+      "username": "user8",
+      "password": "12345"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 9,
+    "fields": {
+      "username": "user9",
+      "password": "12345"
+    }
+  },
+  {
+    "model": "auth.User",
+    "pk": 10,
+    "fields": {
+      "username": "user10",
+      "password": "12345"
+    }
+  },
 
 {
   "model": "users.tenantprofile",
@@ -92,22 +124,65 @@
     "birth_date": "1992-12-16"
   }
 },
+  {
+  "model": "users.landlordprofile",
+  "pk": 1,
+  "fields": {
+    "user": 5,
+    "firstname": "Антон",
+    "lastname": "Егоров",
+    "middlename": "Иванович",
+    "birth_date": "1975-08-09"
+  }
+},
+  {
+  "model": "users.landlordprofile",
+  "pk": 2,
+  "fields": {
+    "user": 6,
+    "firstname": "Евгений",
+    "lastname": "Озеров",
+    "middlename": "Валерьевич",
+    "birth_date": "1987-03-23"
+  }
+},
+  {
+  "model": "users.landlordprofile",
+  "pk": 3,
+  "fields": {
+    "user": 7,
+    "firstname": "Комуфляжев",
+    "lastname": "Павел",
+    "middlename": "Арсеньевич",
+    "birth_date": "1997-12-17"
+  }
+},
+  {
+  "model": "users.landlordprofile",
+  "pk": 4,
+  "fields": {
+    "user": 8,
+    "firstname": "Васильев",
+    "lastname": "Юрий",
+    "middlename": "Васильевич",
+    "birth_date": "1965-01-12"
+  }
+},
 {
   "model": "users.landlordprofile",
   "pk": 5,
   "fields": {
-    "user": 5,
-    "firstname": "Pestel",
-    "lastname": "Pavel",
-    "middlename": "Ivanovich",
-    "birth_date": "1970-02-02"
+    "user": 9,
+    "firstname": "Власов",
+    "lastname": "Аркадий",
+    "birth_date": "1980-11-29"
   }
 },
 {
   "model": "users.landlordprofile",
   "pk": 6,
   "fields": {
-    "user": 6,
+    "user": 10,
     "firstname": "Рылеев",
     "lastname": "Кондратий",
     "middlename": "Фёдорович",
