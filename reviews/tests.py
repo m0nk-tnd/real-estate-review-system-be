@@ -94,10 +94,10 @@ class ReviewOnTenantFilteringTest(APITestCase):
 
     def test_rating_filter(self):
         response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating': 5})
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data['results']), 2)
 
     def test_rating_less_than_equal_filter(self):
         rating = 3
         response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating__lte': rating})
-        for i in response.data:
+        for i in response.data['results']:
             self.assertLessEqual(dict(i)['rating'], rating)
