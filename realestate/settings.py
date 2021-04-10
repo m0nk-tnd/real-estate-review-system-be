@@ -14,7 +14,8 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-
+from datetime import datetime
+from datetime import timedelta
 # loading environment variables
 load_dotenv()
 
@@ -174,3 +175,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(seconds=300),
+    
+}
