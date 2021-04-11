@@ -15,6 +15,7 @@ class LandlordProfileSerializer(serializers.ModelSerializer):
         fields = ['firstname', 'lastname']
 
 class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=30)
     firstname = serializers.CharField(max_length=30)
     lastname = serializers.CharField(max_length=30)
     middlename = serializers.CharField(max_length=30, allow_blank=True, allow_null=True)
@@ -28,7 +29,7 @@ class RegisterSerializer(serializers.Serializer):
     is_landlord = serializers.BooleanField(default=False)
     def save(self, validated_data):
         user = User.objects.create_user(
-            username='user',
+            username=self.validated_data['username'],
         )
         
         is_tenant = self.validated_data['is_tenant']

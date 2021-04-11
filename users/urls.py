@@ -4,7 +4,7 @@ from users.views import (
     TenantProfileListCreateView, TenantProfileDetailView,
     LandlordProfileListCreateView, LandlordProfileDetailView,
 )
-from .api import RegisterApi
+
 app_name = 'users'
 
 urlpatterns = [
@@ -12,7 +12,5 @@ urlpatterns = [
     path('tenant/<int:pk>', TenantProfileDetailView.as_view(), name='retrieve-update-delete-tenant'),
 
     path('landlord', LandlordProfileListCreateView.as_view(), name='list-create-landlord'),
-    path('landlord/<int:pk>', LandlordProfileDetailView.as_view(), name='retrieve-update-delete-landlord'),
-
-    path('api/register', RegisterApi.as_view())
+    path('landlord/<int:pk>', LandlordProfileDetailView.as_view(), name='retrieve-update-delete-landlord'),   
 ]
