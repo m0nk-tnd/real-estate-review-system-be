@@ -79,6 +79,7 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PAGINATION_CLASS': 'realestate.pagination.CustomPagination',
+    'PAGE_SIZE': os.getenv('PAGE_SIZE', 2)
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
