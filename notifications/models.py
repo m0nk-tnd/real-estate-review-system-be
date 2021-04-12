@@ -27,6 +27,7 @@ class Notification(models.Model):
                                  null=True)
     data = models.JSONField(default=dict, null=True)
     sent = models.BooleanField(default=False)
+    date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 
 @receiver(post_save, sender=ReviewOnLandlordProperty)
@@ -40,13 +41,13 @@ def create_notification_review(sender, instance, created, **kwargs):
         email_to = instance.review_on.landlord.user.email
         email_from = instance.reviewer.user.email
         data = {
-            'landlord.id': landlord.id,
-            'landlord_first_name': landlord.firstname,
-            'landlord_last_name': landlord.lastname,
+            'receiver_id': landlord.id,
+            'receiver_first_name': landlord.firstname,
+            'receiver_last_name': landlord.lastname,
             'property_name': property_instance.name,
-            'tenant_id': tenant.id,
-            'tenant_first_name': tenant.firstname,
-            'tenant_last_name': tenant.lastname,
+            'reviewer_id': tenant.id,
+            'reviewer_first_name': tenant.firstname,
+            'reviewer_last_name': tenant.lastname,
             'review_title': review.title,
             'review_text': review.description,
             'review_rating': review.rating,
@@ -67,13 +68,13 @@ def create_notification_rating(sender, instance, created, **kwargs):
         email_to = instance.review_on.user.email
         email_from = instance.reviewer.landlord.user.email
         data = {
-            'landlord.id': landlord.id,
-            'landlord_first_name': landlord.firstname,
-            'landlord_last_name': landlord.lastname,
+            'reviewer_id': landlord.id,
+            'reviewer_first_name': landlord.firstname,
+            'reviewer_last_name': landlord.lastname,
             'property_name': property_instance.name,
-            'tenant_id': tenant.id,
-            'tenant_first_name': tenant.firstname,
-            'tenant_last_name': tenant.lastname,
+            'receiver_id': tenant.id,
+            'receiver_first_name': tenant.firstname,
+            'receiver_last_name': tenant.lastname,
             'review_title': review.title,
             'review_text': review.description,
             'review_rating': review.rating,

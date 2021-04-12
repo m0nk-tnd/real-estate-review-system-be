@@ -51,13 +51,13 @@ class NotificationTemplateReviewTest(TestCase):
 class NotificationModelTest(TestCase):
     def setUp(self):
         self.data = {
-            'landlord.id': 1,
-            'landlord_first_name': 'Anna',
-            'landlord_last_name': 'Grigoreva',
+            'receiver_id': 1,
+            'receiver_first_name': 'Anna',
+            'receiver_last_name': 'Grigoreva',
             'property_name': 'castle',
-            'tenant_id': 1,
-            'tenant_first_name': 'Bob',
-            'tenant_last_name': 'Adams',
+            'reviewer_id': 1,
+            'reviewer_first_name': 'Bob',
+            'reviewer_last_name': 'Adams',
             'review_title': 'The perfect castle',
             'review_text': 'It is very cool but cold',
             'review_rating': 5,
