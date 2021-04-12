@@ -21,7 +21,7 @@ class PropertyListTest(TestCase):
         response = client.get(reverse('property:properties_list_create'))
         properties = Property.objects.all()
         serializer = PropertySerializer(properties, many=True)
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data['results'], serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 

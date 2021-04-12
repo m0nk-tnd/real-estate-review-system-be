@@ -77,6 +77,7 @@ EMAIL_SSL_CERTFILE = os.environ.get('EMAIL_SSL_CERTFILE', None)
 
 # EMAIL_FILE_PATH = '/tmp/app-messages'
 
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'url_filter.integrations.drf.DjangoFilterBackend',
@@ -92,7 +93,8 @@ REST_FRAMEWORK = {
        'rest_framework.permissions.AllowAny',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-
+    'DEFAULT_PAGINATION_CLASS': 'realestate.pagination.CustomPagination',
+    'PAGE_SIZE': os.getenv('PAGE_SIZE', 2)
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
