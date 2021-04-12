@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -100,6 +101,7 @@ class TenantProfileDeleteTest(APITestCase):
 
 
 class TenantProfileFilteringTest(APITestCase):
+
     fixtures = ['fixtures/users.json']
 
     def test_birth_date_range(self) -> None:
@@ -107,7 +109,7 @@ class TenantProfileFilteringTest(APITestCase):
         date_until = '1993-01-01'
         response = self.client.get(reverse('users:list-create-tenant'),
                                    {'birth_date__range': f'{date_from},{date_until}'})
-        for i in response.data:
+        for i in response.data['results']:
             self.assertGreaterEqual(dict(i)['birth_date'], date_from)
             self.assertLessEqual(dict(i)['birth_date'], date_until)
 
@@ -115,12 +117,12 @@ class TenantProfileFilteringTest(APITestCase):
         name = 'Артем'
         user_in_db = 'Артем Теряев'
         response = self.client.get(reverse('users:list-create-tenant'), {'firstname': name})
-        user = dict(response.data[0])
+        user = dict(response.data['results'][0])
         self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)
 
     def test_firstname_contains(self) -> None:
         contains = 'сим'
         user_in_db = 'Максим Зотов'
         response = self.client.get(reverse('users:list-create-tenant'), {'firstname__icontains': contains})
-        user = dict(response.data[0])
+        user = dict(response.data['results'][0])
         self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)

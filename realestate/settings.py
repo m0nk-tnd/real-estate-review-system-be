@@ -62,6 +62,7 @@ CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PP
 
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
 
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'url_filter.integrations.drf.DjangoFilterBackend',
@@ -77,7 +78,8 @@ REST_FRAMEWORK = {
        'rest_framework.permissions.AllowAny',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-
+    'DEFAULT_PAGINATION_CLASS': 'realestate.pagination.CustomPagination',
+    'PAGE_SIZE': os.getenv('PAGE_SIZE', 2)
 }
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
