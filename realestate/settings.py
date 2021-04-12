@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'cities_light',
     'images',
     'rest_framework_jwt',
+    'notifications',
 ]
 
 CITIES_LIGHT_APP_NAME = 'property'
@@ -61,6 +62,20 @@ CITIES_LIGHT_INCLUDE_CITY_TYPES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PP
                                    'PPLF', 'PPLG', 'PPLL', 'PPLR', 'PPLS', 'STLMT']
 
 CITIES_LIGHT_DATA_DIR = os.path.join(BASE_DIR, 'cities_light_data/')
+
+# emails
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.locmem.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 25)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', False)
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', False)
+EMAIL_TIMEOUT = os.environ.get('EMAIL_TIMEOUT', None)
+EMAIL_SSL_KEYFILE = os.environ.get('EMAIL_SSL_KEYFILE', None)
+EMAIL_SSL_CERTFILE = os.environ.get('EMAIL_SSL_CERTFILE', None)
+
+# EMAIL_FILE_PATH = '/tmp/app-messages'
 
 
 REST_FRAMEWORK = {
