@@ -77,6 +77,16 @@ class NotificationModelTest(TestCase):
         field_label = notification._meta.get_field('template').verbose_name
         self.assertEquals(field_label, 'template')
 
+    def test_sent_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('sent').verbose_name
+        self.assertEquals(field_label, 'sent')
+
+    def test_date_created_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('date_created').verbose_name
+        self.assertEquals(field_label, 'date created')
+
 
 class NotificationCreationTest(TestCase):
     def setUp(self):

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Property, City
+from users.models import LandlordProfile
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -8,6 +9,11 @@ class PropertySerializer(serializers.ModelSerializer):
         allow_null=True
     )
 
+    landlord = serializers.PrimaryKeyRelatedField(
+        queryset=LandlordProfile.objects.all(),
+        allow_null=False
+    )
+
     class Meta:
         model = Property
-        fields = ['name', 'address', 'description', 'city']
+        fields = ['landlord', 'name', 'address', 'description', 'city']

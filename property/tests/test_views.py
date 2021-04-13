@@ -1,10 +1,14 @@
+import datetime
 import json
+
+from django.contrib.auth.models import User
 from rest_framework import status
 from django.test import TestCase, Client
 from django.urls import reverse
-from property.models import Property, City
+from property.models import Property
 from property.factories import CityFactory
 from property.serializers import PropertySerializer
+from users.models import LandlordProfile
 
 client = Client()
 
@@ -12,9 +16,14 @@ client = Client()
 class PropertyListTest(TestCase):
     def setUp(self):
         self.city = CityFactory()
-        self.property1 = Property.objects.create(name='my property1', address='my address1',
+        self.user1 = User.objects.create(username='anna123')
+        self.user1.set_password('12345')
+        self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
+                                                       lastname='Grigoreva', middlename='no',
+                                                       birth_date=datetime.date(1999, 1, 18))
+        self.property1 = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
                                                  description='no description1', city=self.city)
-        self.property2 = Property.objects.create(name='my property2', address='my address2',
+        self.property2 = Property.objects.create(landlord=self.landlord, name='my property2', address='my address2',
                                                  description='no description2', city=self.city)
 
     def test_get_all_properties(self):
@@ -28,7 +37,13 @@ class PropertyListTest(TestCase):
 class PropertyCreateTest(TestCase):
     def setUp(self):
         self.city = CityFactory()
+        self.user1 = User.objects.create(username='anna123')
+        self.user1.set_password('12345')
+        self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
+                                                       lastname='Grigoreva', middlename='no',
+                                                       birth_date=datetime.date(1999, 1, 18))
         self.valid_form = {
+            'landlord': self.landlord.pk,
             'name': 'my prop',
             'address': 'spb',
             'description': 'it is pretty',
@@ -36,6 +51,7 @@ class PropertyCreateTest(TestCase):
         }
 
         self.invalid_form = {
+            'landlord': self.landlord.pk,
             'name': '',
             'address': 'spb',
             'description': 'it is pretty',
@@ -62,7 +78,12 @@ class PropertyCreateTest(TestCase):
 class GetSinglePropertyTest(TestCase):
     def setUp(self):
         self.city = CityFactory()
-        self.property = Property.objects.create(name='my property1', address='my address1',
+        self.user1 = User.objects.create(username='anna123')
+        self.user1.set_password('12345')
+        self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
+                                                       lastname='Grigoreva', middlename='no',
+                                                       birth_date=datetime.date(1999, 1, 18))
+        self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
 
     def test_get_valid_property(self):
@@ -82,9 +103,15 @@ class GetSinglePropertyTest(TestCase):
 class PropertyUpdateTest(TestCase):
     def setUp(self):
         self.city = CityFactory()
-        self.property = Property.objects.create(name='my property1', address='my address1',
+        self.user1 = User.objects.create(username='anna123')
+        self.user1.set_password('12345')
+        self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
+                                                       lastname='Grigoreva', middlename='no',
+                                                       birth_date=datetime.date(1999, 1, 18))
+        self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
         self.valid_form = {
+            'landlord': self.landlord.pk,
             'name': 'my prop',
             'address': 'spb',
             'description': 'it is pretty',
@@ -92,6 +119,7 @@ class PropertyUpdateTest(TestCase):
         }
 
         self.invalid_form = {
+            'landlord': self.landlord.pk,
             'name': '',
             'address': 'spb',
             'description': 'it is pretty',
@@ -119,7 +147,12 @@ class PropertyUpdateTest(TestCase):
 class PropertyDeleteTest(TestCase):
     def setUp(self):
         self.city = CityFactory()
-        self.property = Property.objects.create(name='my property1', address='my address1',
+        self.user1 = User.objects.create(username='anna123')
+        self.user1.set_password('12345')
+        self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
+                                                       lastname='Grigoreva', middlename='no',
+                                                       birth_date=datetime.date(1999, 1, 18))
+        self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
                                                 description='no description1', city=self.city)
 
     def test_valid_delete_property(self):
