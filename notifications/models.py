@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from reviews.models import ReviewOnLandlordProperty, ReviewOnTenant
-from .views import send_email
+from .tasks import send_email
 
 
 class NotificationType(models.IntegerChoices):
@@ -55,7 +55,7 @@ def create_notification_review(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.uuid.hex)
+        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.uuid)
 
 
 @receiver(post_save, sender=ReviewOnTenant)
@@ -82,7 +82,7 @@ def create_notification_rating(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.uuid.hex)
+        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.uuid)
 
 
 @receiver(post_save, sender=Notification)

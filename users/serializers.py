@@ -12,4 +12,4 @@ class TenantProfileSerializer(serializers.ModelSerializer):
 class LandlordProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = LandlordProfile
-        fields = ['firstname', 'lastname']
+        fields = ['user', 'firstname', 'lastname', 'middlename', 'birth_date']

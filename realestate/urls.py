@@ -26,5 +26,6 @@ urlpatterns = [
     path('api/v1/reviews/', include('reviews.urls')),
     path('api/v1/properties/', include('property.urls')),
     path('api/v1/profiles/', include('users.urls')),
+    path('api/v1/notifications/', include('notifications.urls')),
     path('login/', obtain_jwt_token),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
