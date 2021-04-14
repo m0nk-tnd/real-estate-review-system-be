@@ -4,100 +4,149 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .serializers import ReviewOnTenantListSerializer
+from .serializers import ReviewOnTenantListSerializer, ReviewOnLandlordPropertyListSerializer
 
-from .models import ReviewOnTenant
+from .models import ReviewOnTenant, ReviewOnLandlordProperty
 from users.models import TenantProfile, LandlordProfile
 from property.models import Property
 
 
-class TenantReviewTestCases(APITestCase):
+class ReviewsTestCases(APITestCase):
     def setUp(self) -> None:
         self.client_ = User.objects.create_user(username='test', password='12345')
         self.client1_ = User.objects.create_user(username='test1', password='12345')
-        self.review_on = TenantProfile.objects.create(
+        self.tenant_profile = TenantProfile.objects.create(
             user=self.client_,
-            firstname='Name',
+            firstname='Tenant',
             lastname='Lastname',
             middlename='Middlename',
-            birth_date='1990-06-28',
+            birth_date='1980-04-17',
         )
-        self.landlord = LandlordProfile.objects.create(
+        self.landlord_profile = LandlordProfile.objects.create(
             user=self.client1_,
-            firstname='Name',
+            firstname='Landlord',
             lastname='Lastname',
             middlename='Middlename',
-            birth_date='1990-06-28',
+            birth_date='1950-06-28',
         )
-        self.prop = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                            description='no description1')
-        self.data = {'title': 'title', 'description': 'description', 'rating': 4,
-                     'reviewer': self.prop.pk, 'review_on': self.review_on.pk}
+        self.property = Property.objects.create(landlord=self.landlord_profile, name='my property1',
+                                                address='my address1', description='no description1')
+        self.data_review_on_tenant = {'title': 'title', 'description': 'description', 'rating': 4,
+                                      'reviewer': self.property.pk, 'review_on': self.tenant_profile.pk}
+        self.data_review_on_landlord_property = {'title': 'Some_title', 'description': 'desc', 'rating': 1,
+                                                 'reviewer': self.tenant_profile.pk, 'review_on': self.property.pk}
         self.incorrect_data = {'title': 'title', 'description': 'description', 'rating': 0}
-        self.tenant_review = ReviewOnTenant.objects.create(
-            title=self.data['title'],
-            description=self.data['description'],
-            rating=self.data['rating'],
-            reviewer=self.prop,
-            review_on=self.review_on
+        self.review_on_tenant = ReviewOnTenant.objects.create(
+            title=self.data_review_on_tenant['title'],
+            description=self.data_review_on_tenant['description'],
+            rating=self.data_review_on_tenant['rating'],
+            reviewer=self.property,
+            review_on=self.tenant_profile
+        )
+        self.reviews_on_landlord_property = ReviewOnLandlordProperty.objects.create(
+            title=self.data_review_on_landlord_property['title'],
+            description=self.data_review_on_landlord_property['description'],
+            rating=self.data_review_on_landlord_property['rating'],
+            reviewer=self.tenant_profile,
+            review_on=self.property
         )
         self.client.login(username='test', password='12345')
         self.client.login(username='test1', password='12345')
 
-    def test_create_tenant_review(self):
-        tenant_review = self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
-        self.assertEqual(tenant_review.status_code, status.HTTP_201_CREATED)
+    def test_create_reviews(self):
+        review_on_tenant = self.client.post(reverse('reviews:list-create-tenant-review'), self.data_review_on_tenant)
+        review_on_landlord_property = self.client.post(reverse('reviews:list-create-landlord-review'),
+                                                       self.data_review_on_landlord_property)
+        self.assertEqual(review_on_tenant.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(review_on_landlord_property.status_code, status.HTTP_201_CREATED)
 
-    def test_view_tenant_review(self):
-        response = self.client.get(reverse('reviews:list-create-tenant-review'))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_list_reviews(self):
+        review_on_tenant = self.client.get(reverse('reviews:list-create-tenant-review'))
+        review_on_landlord_property = self.client.get(reverse('reviews:list-create-landlord-review'))
+        self.assertEqual(review_on_tenant.status_code, status.HTTP_200_OK)
+        self.assertEqual(review_on_landlord_property.status_code, status.HTTP_200_OK)
 
-    def test_get_certain_tenant_review(self):
-        tenant_review = self.tenant_review
-        response = self.client.get(reverse('reviews:delete-update-retrieve-tenant-review',
-                                           kwargs={'pk': tenant_review.pk}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_get_certain_reviews(self):
+        response_review_on_tenant = self.client.get(reverse('reviews:delete-update-retrieve-tenant-review',
+                                                            kwargs={'pk': self.review_on_tenant.pk}))
+        response_review_on_landlord_property = self.client.get(reverse(
+            'reviews:delete-update-retrieve-landlord-review', kwargs={'pk': self.reviews_on_landlord_property.pk})
+        )
+        self.assertEqual(response_review_on_tenant.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_review_on_landlord_property.status_code, status.HTTP_200_OK)
 
-    def test_delete_tenant_review(self):
-        tenant_review = self.tenant_review
-        response = self.client.delete(reverse('reviews:delete-update-retrieve-tenant-review',
-                                              kwargs={'pk': tenant_review.pk}))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+    def test_delete_reviews(self):
+        response_review_on_tenant = self.client.delete(reverse('reviews:delete-update-retrieve-tenant-review',
+                                                               kwargs={'pk': self.review_on_tenant.pk}))
+        response_review_on_landlord_property = self.client.delete(
+            reverse('reviews:delete-update-retrieve-landlord-review',
+                    kwargs={'pk': self.reviews_on_landlord_property.pk}))
+        self.assertEqual(response_review_on_tenant.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response_review_on_landlord_property.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_update_tenant_review(self):
-        tenant_review = self.tenant_review
+    def test_update_reviews(self):
         new_data = {'description': 'really_new_description', 'rating': 5}
-        response = self.client.patch(reverse('reviews:delete-update-retrieve-tenant-review',
-                                             kwargs={'pk': tenant_review.pk}), data=new_data)
+        response_review_on_tenant = self.client.patch(reverse('reviews:delete-update-retrieve-tenant-review',
+                                                              kwargs={'pk': self.review_on_tenant.pk}), data=new_data)
+        response_review_on_landlord_property = self.client.patch(
+            reverse('reviews:delete-update-retrieve-landlord-review',
+                    kwargs={'pk': self.reviews_on_landlord_property.pk}), data=new_data)
 
-        self.assertEqual(response.data['description'], new_data['description'])
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_review_on_tenant.data['description'], new_data['description'])
+        self.assertEqual(response_review_on_tenant.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_review_on_landlord_property.data['description'], new_data['description'])
+        self.assertEqual(response_review_on_landlord_property.status_code, status.HTTP_200_OK)
 
-    def test_create_review_with_wrong_rating(self):
-        response = self.client.post(reverse('reviews:list-create-tenant-review'), self.incorrect_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    def test_create_reviews_with_wrong_rating(self):
+        response_review_on_tenant = self.client.post(reverse('reviews:list-create-tenant-review'), self.incorrect_data)
+        response_review_on_landlord_property = self.client.post(reverse('reviews:list-create-landlord-review'),
+                                                                self.incorrect_data)
+        self.assertEqual(response_review_on_tenant.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_review_on_landlord_property.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_tenant_review_list_model_data(self):
-        self.client.post(reverse('reviews:list-create-tenant-review'), self.data)
-        response = self.client.get(reverse('reviews:list-create-tenant-review'))
-        reviews = ReviewOnTenant.objects.all()
-        serializer = ReviewOnTenantListSerializer(reviews, many=True)
-        self.assertEqual(response.data['results'], serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    def test_reviews_list_model_data(self):
+        self.client.post(reverse('reviews:list-create-tenant-review'), self.data_review_on_tenant)
+        self.client.post(reverse('reviews:list-create-landlord-review'), self.data_review_on_landlord_property)
+
+        response_review_on_tenant = self.client.get(reverse('reviews:list-create-tenant-review'))
+        response_review_on_landlord_property = self.client.get(reverse('reviews:list-create-landlord-review'))
+        reviews_on_tenant = ReviewOnTenant.objects.all()
+        reviews_on_landlord_property = ReviewOnLandlordProperty.objects.all()
+        serializer_tenant = ReviewOnTenantListSerializer(reviews_on_tenant, many=True)
+        serializer_landlord_property = ReviewOnLandlordPropertyListSerializer(reviews_on_landlord_property, many=True)
+
+        self.assertEqual(response_review_on_tenant.data['results'], serializer_tenant.data)
+        self.assertEqual(response_review_on_tenant.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_review_on_landlord_property.data['results'], serializer_landlord_property.data)
+        self.assertEqual(response_review_on_landlord_property.status_code, status.HTTP_200_OK)
 
 
-class ReviewOnTenantFilteringTest(APITestCase):
+class ReviewsFilteringTest(APITestCase):
     fixtures = ['fixtures/images.json',
                 'fixtures/users.json',
                 'fixtures/property.json',
                 'fixtures/reviews.json']
 
     def test_rating_filter(self):
-        response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating': 5})
-        self.assertEqual(len(response.data['results']), 2)
+        response_review_on_tenant = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating': 5})
+        response_review_on_landlord_property = self.client.get(
+            reverse('reviews:list-create-landlord-review'), {'rating': 2}
+        )
+        self.assertEqual(len(response_review_on_tenant.data['results']), 2)
+        self.assertEqual(len(response_review_on_landlord_property.data['results']), 1)
 
     def test_rating_less_than_equal_filter(self):
-        rating = 3
-        response = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating__lte': rating})
-        for i in response.data['results']:
-            self.assertLessEqual(dict(i)['rating'], rating)
+        tenant_rating, landlord_rating = (3, 3)
+
+        response_review_on_tenant = self.client.get(
+            reverse('reviews:list-create-tenant-review'), {'rating__lte': tenant_rating}
+        )
+        response_review_on_landlord_property = self.client.get(
+            reverse('reviews:list-create-landlord-review'), {'rating__lte':  landlord_rating}
+        )
+        tenant_data = response_review_on_tenant.data['results']
+        landlord_data = response_review_on_landlord_property.data['results']
+
+        for tenant_rate, landlord_rate in zip(tenant_data, landlord_data):
+            self.assertLessEqual(dict(tenant_rate)['rating'], tenant_rating)
+            self.assertLessEqual(dict(landlord_rate)['rating'], tenant_rating)

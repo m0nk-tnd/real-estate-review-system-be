@@ -1,14 +1,13 @@
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.conf import settings
 
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import TenantProfile
+from .models import TenantProfile, LandlordProfile
 
 
-class TenantProfileCreateTest(APITestCase):
+class ProfilesCreateTest(APITestCase):
     def setUp(self):
         self.client_ = User.objects.create_user(username='test_username', password='12345')
         self.data_ = {
@@ -19,89 +18,101 @@ class TenantProfileCreateTest(APITestCase):
             'birth_date': '1990-06-28',
         }
 
-    def test_create_tenant_profile(self) -> None:
-        response = self.client.post(reverse('users:list-create-tenant'), self.data_)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    def test_create_profiles(self) -> None:
+        response_tenant_profile = self.client.post(reverse('users:list-create-tenant'), self.data_)
+        response_landlord_profile = self.client.post(reverse('users:list-create-landlord'), self.data_)
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_201_CREATED)
 
-    def test_create_invalid_tenant_profile(self) -> None:
+    def test_create_invalid_profiles(self) -> None:
         self.data_.update({'firstname': ''})
-        response = self.client.post(reverse('users:list-create-tenant'), self.data_)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        response_tenant_profile = self.client.post(reverse('users:list-create-tenant'), self.data_)
+        response_landlord_profile = self.client.post(reverse('users:list-create-landlord'), self.data_)
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TenantProfileListGetTest(APITestCase):
+class ProfilesListGetTest(APITestCase):
     def setUp(self) -> None:
         self.client1 = User.objects.create_user(username='testuser', password='12345')
         self.client2 = User.objects.create_user(username='testuser1', password='12345')
-        self.tenant1 = TenantProfile.objects.create(
+        self.tenant_profile = TenantProfile.objects.create(
             user=self.client1, firstname='Ivan', lastname='Ivanov',
             middlename='Ivanovich', birth_date='2000-07-15'
         )
-        self.tenant2 = TenantProfile.objects.create(
+        self.landlord_profile = LandlordProfile.objects.create(
             user=self.client2, firstname='Andrey', lastname='Andreev',
             middlename='Andreevich', birth_date='1985-01-30'
         )
 
-    def test_get_existing_tenant_profile(self) -> None:
-        response = self.client.get(reverse('users:retrieve-update-delete-tenant',
-                                           kwargs={'pk': self.tenant1.pk}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.tenant1.user.username, self.client1.username)
-        self.assertEqual(response.data['firstname'], self.tenant1.firstname)
+    def test_get_existing_profiles(self) -> None:
+        response_tenant_profile = self.client.get(reverse('users:retrieve-update-delete-tenant',
+                                                          kwargs={'pk': self.tenant_profile.pk}))
+        response_landlord_profile = self.client.get(reverse('users:retrieve-update-delete-landlord',
+                                                            kwargs={'pk': self.landlord_profile.pk}))
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.tenant_profile.user.username, self.client1.username)
 
-    def test_get_all_existing_tenants_profiles(self) -> None:
-        response = self.client.get(reverse('users:list-create-tenant'))
-        self.assertEqual(TenantProfile.objects.all().count(), 2)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.landlord_profile.user.username, self.client2.username)
 
-    def test_get_nonexistent_tenant_profile(self) -> None:
+    def test_get_nonexistent_profiles(self) -> None:
         non_existent_id = 3
-        response = self.client.get(reverse('users:retrieve-update-delete-tenant',
-                                           kwargs={'pk': non_existent_id}))  # пользователь с id=3
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        response_tenant_profile = self.client.get(reverse('users:retrieve-update-delete-tenant',
+                                                          kwargs={'pk': non_existent_id}))  # tenant с id=3
+        response_landlord_profile = self.client.get(reverse('users:retrieve-update-delete-landlord',
+                                                            kwargs={'pk': non_existent_id}))  # landlord с id=3
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class TenantProfileUpdateTest(APITestCase):
-    def setUp(self) -> None:
-        self.client_ = User.objects.create_user(username='test', password='12345')
-        self.tenant = TenantProfile.objects.create(
-            user=self.client_, firstname='Ivan', lastname='Ivanov',
-            middlename='Ivanovich', birth_date='2000-07-15'
-        )
+class ProfilesUpdateTest(APITestCase):
+    fixtures = ['fixtures/users.json']
 
-    def test_update_tenant_profile(self) -> None:
+    def test_update_profiles(self) -> None:
         data_to_update = {'firstname': "Anton", 'middlename': 'Antonovich', 'birth_date': '1988-03-25'}
-        response = self.client.patch(reverse('users:retrieve-update-delete-tenant',
-                                             kwargs={'pk': self.tenant.pk}), data=data_to_update)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['firstname'], data_to_update['firstname'])
-        self.assertEqual(response.data['middlename'], data_to_update['middlename'])
-        self.assertEqual(response.data['birth_date'], data_to_update['birth_date'])
+        response_tenant_profile = self.client.patch(reverse('users:retrieve-update-delete-tenant',
+                                                            kwargs={'pk': 1}), data=data_to_update)
+        response_landlord_profile = self.client.patch(reverse('users:retrieve-update-delete-landlord',
+                                                              kwargs={'pk': 2}), data=data_to_update)
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_tenant_profile.data['firstname'], data_to_update['firstname'])
+        self.assertEqual(response_tenant_profile.data['middlename'], data_to_update['middlename'])
+        self.assertEqual(response_tenant_profile.data['birth_date'], data_to_update['birth_date'])
 
-    def test_update_tenant_profile_with_invalid_data(self) -> None:
-        invalid_data = {'firstname': ''}
-        response = self.client.patch(reverse('users:retrieve-update-delete-tenant',
-                                             kwargs={'pk': self.tenant.pk}), data=invalid_data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_landlord_profile.data['firstname'], data_to_update['firstname'])
+        self.assertEqual(response_landlord_profile.data['middlename'], data_to_update['middlename'])
+        self.assertEqual(response_landlord_profile.data['birth_date'], data_to_update['birth_date'])
+
+    def test_update_profiles_with_invalid_data(self) -> None:
+        invalid_data = {'firstname': '', 'middlename': 101}
+        response_tenant_profile = self.client.patch(reverse('users:retrieve-update-delete-tenant',
+                                                            kwargs={'pk': 2}), data=invalid_data)
+        response_landlord_profile = self.client.patch(reverse('users:retrieve-update-delete-landlord',
+                                                              kwargs={'pk': 1}), data=invalid_data)
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class TenantProfileDeleteTest(APITestCase):
-    def setUp(self) -> None:
-        self.client_ = User.objects.create_user(username='test', password='12345')
-        self.tenant = TenantProfile.objects.create(
-            user=self.client_, firstname='Ivan', lastname='Ivanov',
-            middlename='Ivanovich', birth_date='2000-07-15'
-        )
+class ProfilesDeleteTest(APITestCase):
+    fixtures = ['fixtures/users.json']
 
     def test_delete_tenant_profile(self) -> None:
-        response = self.client.delete(reverse('users:retrieve-update-delete-tenant',
-                                              kwargs={'pk': self.tenant.pk}))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(TenantProfile.objects.all().count(), 0)
+        tenants_count = TenantProfile.objects.all().count()
+        landlord_count = LandlordProfile.objects.all().count()
+        response_tenant_profile = self.client.delete(reverse('users:retrieve-update-delete-tenant',
+                                                             kwargs={'pk': 2}))
+        response_landlord_profile = self.client.delete(reverse('users:retrieve-update-delete-landlord',
+                                                               kwargs={'pk': 3}))
+        self.assertEqual(response_tenant_profile.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(TenantProfile.objects.all().count(), tenants_count - 1)
+
+        self.assertEqual(response_landlord_profile.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(LandlordProfile.objects.all().count(), landlord_count - 1)
 
 
-class TenantProfileFilteringTest(APITestCase):
-
+class ProfilesFilteringTest(APITestCase):
     fixtures = ['fixtures/users.json']
 
     def test_birth_date_range(self) -> None:
