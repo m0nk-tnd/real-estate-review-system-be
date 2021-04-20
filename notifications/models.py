@@ -28,7 +28,7 @@ class Notification(models.Model):
     data = models.JSONField(default=dict, null=True)
     sent = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    receiver_user = models.CharField(max_length=255, null=True)
+    receiver_user = models.PositiveIntegerField(null=True)
 
 
 @receiver(post_save, sender=ReviewOnLandlordProperty)
@@ -55,7 +55,7 @@ def create_notification_review(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.uuid)
+        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.user.id)
 
 
 @receiver(post_save, sender=ReviewOnTenant)
@@ -82,7 +82,7 @@ def create_notification_rating(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.uuid)
+        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.user.id)
 
 
 @receiver(post_save, sender=Notification)

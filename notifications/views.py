@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import Notification
-from .serializers import NotificationSerializer
+from .models import Notification, NotificationTemplate
+from .serializers import NotificationSerializer, NotificationTemplateSerializer
 
 
 class NotificationList(generics.ListAPIView):
@@ -8,5 +8,10 @@ class NotificationList(generics.ListAPIView):
     serializer_class = NotificationSerializer
 
     def get_queryset(self):
-        queryset = self.queryset.filter(receiver_user=self.kwargs['user_uuid'])
+        queryset = self.queryset.filter(receiver_user=self.request.user.id)
         return queryset
+
+
+class NotificationTemplateList(generics.ListAPIView):
+    queryset = NotificationTemplate.objects.all()
+    serializer_class = NotificationTemplateSerializer
