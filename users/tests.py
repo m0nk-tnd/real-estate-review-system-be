@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from .models import TenantProfile
-
+from serializers import RegisterSerializer
 
 class TenantProfileCreateTest(APITestCase):
     def setUp(self):
@@ -124,3 +124,22 @@ class TenantProfileFilteringTest(APITestCase):
         response = self.client.get(reverse('users:list-create-tenant'), {'firstname__icontains': contains})
         user = dict(response.data[0])
         self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)
+
+class UserRegisterTest(APITestCase):
+    def setUp(self):
+        self.register_url = reverse('api/v1/register')
+
+        self.user_data = {
+            'username': "test",
+            'firstname': "Sergey",
+            'lastname': "Zlatko",
+            'birth_date': "1980-03-10",
+            'password': "12345",
+            'password2': "12345",
+            'email': "ser@gmail.com"
+        }
+
+    def test_user_cannot_register_with_no_data(self):
+        response = self.client.post(self.register_url)
+        self.asserEqual(response.status_code, 400)
+

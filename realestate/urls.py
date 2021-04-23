@@ -19,7 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 from users.api import RegisterApi
 
 urlpatterns = [
@@ -28,5 +28,6 @@ urlpatterns = [
     path('api/v1/properties/', include('property.urls')),
     path('api/v1/profiles/', include('users.urls')),
     path('login/', obtain_jwt_token),
-    path('api/register', RegisterApi.as_view()),
+    path('api/v1/register', RegisterApi.as_view()),
+    path('api/v1/refresh', refresh_jwt_token),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
