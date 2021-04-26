@@ -50,14 +50,16 @@ class NotificationTemplateReviewTest(TestCase):
 
 class NotificationModelTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create(username='anna123')
+        self.user.set_password('12345')
         self.data = {
-            'landlord.id': 1,
-            'landlord_first_name': 'Anna',
-            'landlord_last_name': 'Grigoreva',
+            'receiver_id': 1,
+            'receiver_first_name': 'Anna',
+            'receiver_last_name': 'Grigoreva',
             'property_name': 'castle',
-            'tenant_id': 1,
-            'tenant_first_name': 'Bob',
-            'tenant_last_name': 'Adams',
+            'reviewer_id': 1,
+            'reviewer_first_name': 'Bob',
+            'reviewer_last_name': 'Adams',
             'review_title': 'The perfect castle',
             'review_text': 'It is very cool but cold',
             'review_rating': 5,
@@ -65,7 +67,7 @@ class NotificationModelTest(TestCase):
 
         self.notification = Notification.objects.create(
             data=self.data,
-            template=NotificationTemplate.objects.get(type=NotificationType.REVIEW))
+            template=NotificationTemplate.objects.get(type=NotificationType.REVIEW), sent=False, receiver_user=self.user)
 
     def test_data_label(self):
         notification = Notification.objects.get(id=self.notification.id)
@@ -76,6 +78,21 @@ class NotificationModelTest(TestCase):
         notification = Notification.objects.get(id=self.notification.id)
         field_label = notification._meta.get_field('template').verbose_name
         self.assertEquals(field_label, 'template')
+
+    def test_sent_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('sent').verbose_name
+        self.assertEquals(field_label, 'sent')
+
+    def test_date_created_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('date_created').verbose_name
+        self.assertEquals(field_label, 'date created')
+
+    def test_receiver_user_label(self):
+        notification = Notification.objects.get(id=self.notification.id)
+        field_label = notification._meta.get_field('receiver_user').verbose_name
+        self.assertEquals(field_label, 'receiver user')
 
 
 class NotificationCreationTest(TestCase):

@@ -1,3 +1,4 @@
+import uuid as uuid
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -8,6 +9,7 @@ class BaseUserProfile(models.Model):
     lastname = models.CharField(max_length=30)
     middlename = models.CharField(max_length=30, blank=True, null=True)
     birth_date = models.DateField(verbose_name='Date of birth')
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         abstract = True
