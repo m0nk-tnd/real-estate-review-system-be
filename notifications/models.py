@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from reviews.models import ReviewOnLandlordProperty, ReviewOnTenant
 from .tasks import send_email
+from django.contrib.auth.models import User
 
 
 class NotificationType(models.IntegerChoices):
@@ -28,7 +29,7 @@ class Notification(models.Model):
     data = models.JSONField(default=dict, null=True)
     sent = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
-    receiver_user = models.PositiveIntegerField(null=True)
+    receiver_user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE, null=True)
 
 
 @receiver(post_save, sender=ReviewOnLandlordProperty)
@@ -55,7 +56,7 @@ def create_notification_review(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.user.id)
+        create_notification(notification_type=notification_type, data=data, receiver_user=landlord.user)
 
 
 @receiver(post_save, sender=ReviewOnTenant)
@@ -82,7 +83,7 @@ def create_notification_rating(sender, instance, created, **kwargs):
             'email_to': email_to,
             'email_from': email_from,
         }
-        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.user.id)
+        create_notification(notification_type=notification_type, data=data, receiver_user=tenant.user)
 
 
 @receiver(post_save, sender=Notification)
