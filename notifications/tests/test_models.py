@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core import mail
 from ..models import NotificationType, Notification, NotificationTemplate
+from ..tasks import send_email
 from reviews.models import ReviewOnLandlordProperty, ReviewOnTenant
 from users.models import LandlordProfile, TenantProfile
 from property.models import Property
@@ -118,11 +119,13 @@ class NotificationCreationTest(TestCase):
                                                 title='my review', description='cool property',
                                                 rating=5)
         self.assertEqual(Notification.objects.all().count(), 1)
+        send_email.apply()
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Review')
         ReviewOnTenant.objects.create(reviewer=self.property, review_on=self.tenant,
                                       title='my rating', description='cool tenant',
                                       rating=5)
         self.assertEqual(Notification.objects.all().count(), 2)
+        send_email.apply()
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(mail.outbox[1].subject, 'Rating')
