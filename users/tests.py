@@ -6,7 +6,11 @@ from rest_framework.test import APITestCase
 
 from .models import TenantProfile, LandlordProfile
 
-
+from .models import TenantProfile
+from .serializers import RegisterSerializer
+from django.db import IntegrityError
+import traceback
+from psycopg2._psycopg import IntegrityError
 class ProfilesCreateTest(APITestCase):
     def setUp(self):
         self.client_ = User.objects.create_user(username='test_username', password='12345')
@@ -137,3 +141,63 @@ class ProfilesFilteringTest(APITestCase):
         response = self.client.get(reverse('users:list-create-tenant'), {'firstname__icontains': contains})
         user = dict(response.data['results'][0])
         self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)
+
+class UserRegisterTest(APITestCase):
+    def setUp(self):
+        
+        
+        self.user_data = {
+            'username': 'test_username',
+            'firstname': 'Sergey',
+            'lastname': 'Zlatko',
+            'middlename': 'Middlename',
+            'birth_date': '1980-03-10',
+            'password': '12345',
+            'password2': '12345',
+            'email': 'ser@gmail.com',
+            'is_tenant': 'True',
+            'is_landlord': 'False',
+        }
+
+        self.user_data_2 = {
+            'username': 'test_username_2',
+            'firstname': 'Pavel',
+            'lastname': 'Berg',
+            'middlename': 'Middlename',
+            'birth_date': '1980-03-10',
+            'password': '12345',
+            'password2': '12345',
+            'email': 'pav@gmail.com',
+            'is_tenant': 'True',
+            'is_landlord': 'True',
+        }
+       
+
+    def test_user_can_register(self):
+        response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
+        self.assertEqual(response_register_profile.status_code, 200, response_register_profile.data)
+
+    def test_user_cannot_register_with_no_data(self):
+        response_register_profile = self.client.post(reverse('register'))
+        self.assertEqual(response_register_profile.status_code, 400)
+    
+    def test_two_users(self):
+        response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
+        response_register_profile_2 = self.client.post(reverse('register'), self.user_data_2, format="json")
+        self.assertEqual(response_register_profile.status_code, 200)
+"""
+    def test_two_identical_users(self):
+        try:
+            response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
+
+    #    with self.assertRaises(IntegrityError) as context:
+    #       response_register_profile_2 = self.client.post(reverse('register'), self.user_data, format="json")
+    #       self.assertTrue('UNIQUE constraint failed' in str(context.exception))
+        
+            response_register_profile_2 = self.client.post(reverse('register'), self.user_data, format="json")
+        
+        except IntegrityError:
+            transaction.rollback() 
+"""
+
+        
