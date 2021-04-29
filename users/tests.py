@@ -9,8 +9,7 @@ from .models import TenantProfile, LandlordProfile
 from .models import TenantProfile
 from .serializers import RegisterSerializer
 from django.db import IntegrityError
-import traceback
-from psycopg2._psycopg import IntegrityError
+
 class ProfilesCreateTest(APITestCase):
     def setUp(self):
         self.client_ = User.objects.create_user(username='test_username', password='12345')
@@ -185,19 +184,11 @@ class UserRegisterTest(APITestCase):
         response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
         response_register_profile_2 = self.client.post(reverse('register'), self.user_data_2, format="json")
         self.assertEqual(response_register_profile.status_code, 200)
-"""
+
     def test_two_identical_users(self):
         try:
             response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
-
-    #    with self.assertRaises(IntegrityError) as context:
-    #       response_register_profile_2 = self.client.post(reverse('register'), self.user_data, format="json")
-    #       self.assertTrue('UNIQUE constraint failed' in str(context.exception))
-        
             response_register_profile_2 = self.client.post(reverse('register'), self.user_data, format="json")
         
-        except IntegrityError:
-            transaction.rollback() 
-"""
-
-        
+        except IntegrityError as e:
+            return {"message": e}
