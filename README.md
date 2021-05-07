@@ -13,3 +13,4 @@ To start the project locally you should run the ```prepare_venv.sh``` script, th
 
 To test the project with fixtures you should use ```$ python manage.py loaddata fixtures/*.json``` to load first data.
 
+Working environment is Python 3.7, 3.8.9 and 3.9.4 
