@@ -10,6 +10,7 @@ from .models import TenantProfile
 from .serializers import RegisterSerializer
 from django.db import IntegrityError
 
+
 class ProfilesCreateTest(APITestCase):
     def setUp(self):
         self.client_ = User.objects.create_user(username='test_username', password='12345')
@@ -141,10 +142,9 @@ class ProfilesFilteringTest(APITestCase):
         user = dict(response.data['results'][0])
         self.assertEqual(user['firstname'] + ' ' + user['lastname'], user_in_db)
 
+
 class UserRegisterTest(APITestCase):
     def setUp(self):
-        
-        
         self.user_data = {
             'username': 'test_username',
             'firstname': 'Sergey',
@@ -170,7 +170,6 @@ class UserRegisterTest(APITestCase):
             'is_tenant': 'True',
             'is_landlord': 'True',
         }
-       
 
     def test_user_can_register(self):
         response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
@@ -186,9 +185,6 @@ class UserRegisterTest(APITestCase):
         self.assertEqual(response_register_profile.status_code, 200)
 
     def test_two_identical_users(self):
-        try:
-            response_register_profile = self.client.post(reverse('register'), self.user_data, format="json")
-            response_register_profile_2 = self.client.post(reverse('register'), self.user_data, format="json")
-        
-        except IntegrityError as e:
-            return {"message": e}
+        with self.assertRaises(IntegrityError):
+            self.client.post(reverse('register'), self.user_data, format="json")
+            self.client.post(reverse('register'), self.user_data, format="json")
