@@ -15,5 +15,5 @@ class CityFactory(factory.django.DjangoModelFactory):
         model = City
         django_get_or_create = ('name',)
 
-    name = 'Moscow'
+    name = 'Saint Petersburg'
     country = factory.SubFactory(CountryFactory)

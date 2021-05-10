@@ -22,9 +22,9 @@ class PropertyListTest(TestCase):
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
         self.property1 = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                                 description='no description1', city=self.city)
+                                                 city=self.city)
         self.property2 = Property.objects.create(landlord=self.landlord, name='my property2', address='my address2',
-                                                 description='no description2', city=self.city)
+                                                 city=self.city)
 
     def test_get_all_properties(self):
         response = client.get(reverse('property:properties_list_create'))
@@ -46,16 +46,23 @@ class PropertyCreateTest(TestCase):
             'landlord': self.landlord.pk,
             'name': 'my prop',
             'address': 'spb',
-            'description': 'it is pretty',
-            'city': self.city.pk
+            'city': self.city.pk,
+            'living_square': 40.6
         }
 
         self.invalid_form = {
             'landlord': self.landlord.pk,
             'name': '',
             'address': 'spb',
-            'description': 'it is pretty',
             'city': self.city.pk
+        }
+
+        self.invalid_form2 = {
+            'landlord': self.landlord.pk,
+            'name': '',
+            'address': 'spb',
+            'city': self.city.pk,
+            'living_square': -0.5
         }
 
     def test_create_valid_property(self):
@@ -74,6 +81,14 @@ class PropertyCreateTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_invalid_property_2(self):
+        response = client.post(
+            reverse('property:properties_list_create'),
+            data=json.dumps(self.invalid_form2),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class GetSinglePropertyTest(TestCase):
     def setUp(self):
@@ -84,7 +99,7 @@ class GetSinglePropertyTest(TestCase):
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
         self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                                description='no description1', city=self.city)
+                                                city=self.city)
 
     def test_get_valid_property(self):
         response = client.get(
@@ -109,21 +124,23 @@ class PropertyUpdateTest(TestCase):
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
         self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                                description='no description1', city=self.city)
+                                                city=self.city)
         self.valid_form = {
             'landlord': self.landlord.pk,
             'name': 'my prop',
             'address': 'spb',
-            'description': 'it is pretty',
-            'city': self.city.pk
+            'city': self.city.pk,
+            'balcony': True,
+            'overall_square': 0.0
         }
 
         self.invalid_form = {
             'landlord': self.landlord.pk,
             'name': '',
             'address': 'spb',
-            'description': 'it is pretty',
-            'city': self.city.pk
+            'city': self.city.pk,
+            'balcony': True,
+            'overall_square': 0.0
         }
 
     def test_valid_update_property(self):
@@ -153,7 +170,7 @@ class PropertyDeleteTest(TestCase):
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
         self.property = Property.objects.create(landlord=self.landlord, name='my property1', address='my address1',
-                                                description='no description1', city=self.city)
+                                                city=self.city)
 
     def test_valid_delete_property(self):
         self.assertEqual(Property.objects.all().count(), 1)
