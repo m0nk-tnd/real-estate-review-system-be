@@ -4,6 +4,7 @@ services:
     web:
         build: .
         command: python manage.py runserver 0.0.0.0:8000
+        entrypoint: "/code/entrypoint.sh"
         volumes: 
             - ./:/code/
         ports:
@@ -18,9 +19,11 @@ services:
             - SQL_HOST=db
             - SQL_PORT=5432
             - DATABASE=postgres
+            - BROKER_URL=redis://redis:6379
+            - CELERY_RESULT_BACKEND=redis://redis:6379
         depends_on: 
             - db
-    
+            - redis
         
     db:
         image: postgres
@@ -30,6 +33,47 @@ services:
             - POSTGRES_USER=admin
             - POSTGRES_PASSWORD=admin
             - POSTGRES_DB=dbase
+
+    redis:
+        image: "redis:alpine"
+
+    celery:
+        build: .
+        command: celery -b redis://redis:6379 --result-backend redis://redis:6379 -A realestate worker -l info
+        volumes:
+            - ./:/code/
+        environment:
+            - SQL_ENGINE=django.db.backends.postgresql
+            - SQL_DATABASE=dbase
+            - SQL_USER=admin
+            - SQL_PASSWORD=admin
+            - SQL_HOST=db
+            - SQL_PORT=5432
+            - DATABASE=postgres
+            - BROKER_URL=redis://redis:6379
+            - CELERY_RESULT_BACKEND=redis://redis:6379
+        depends_on:
+            - db
+            - redis
+
+    celery-beat:
+        build: .
+        command: celery -b redis://redis:6379 --result-backend redis://redis:6379 -A realestate beat -l info
+        volumes:
+            - ./:/code/
+        environment:
+            - SQL_ENGINE=django.db.backends.postgresql
+            - SQL_DATABASE=dbase
+            - SQL_USER=admin
+            - SQL_PASSWORD=admin
+            - SQL_HOST=db
+            - SQL_PORT=5432
+            - DATABASE=postgres
+            - BROKER_URL=redis://redis:6379
+            - CELERY_RESULT_BACKEND=redis://redis:6379
+        depends_on:
+            - db
+            - redis
 
 volumes: 
     postgres_data:

@@ -86,10 +86,10 @@ def create_notification_rating(sender, instance, created, **kwargs):
         create_notification(notification_type=notification_type, data=data, receiver_user=tenant.user)
 
 
-@receiver(post_save, sender=Notification)
-def create_and_send_email(sender, instance, created, **kwargs):
-    if created:
-        send_email(instance)
+# @receiver(post_save, sender=Notification)
+# def create_and_send_email(sender, instance, created, **kwargs):
+#     if created:
+#         send_email.delay()
 
 
 def create_notification(notification_type, data, receiver_user):
