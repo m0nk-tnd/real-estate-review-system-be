@@ -6,6 +6,7 @@ from cities_light.abstract_models import (
 from cities_light.receivers import connect_default_signals
 from images.models import ImageAlbum
 from users.models import LandlordProfile
+from django.core.validators import MinValueValidator
 
 
 class EnabledObjectManager(models.Manager):
@@ -57,7 +58,16 @@ class Property(models.Model):
     landlord = models.ForeignKey(LandlordProfile, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=150)
     address = models.TextField()
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
+    building_type = models.CharField(max_length=255, null=True, blank=True)
+    overall_floors = models.PositiveIntegerField(null=True, blank=True)
+    floor = models.PositiveIntegerField(null=True, blank=True)
+    decoration = models.BooleanField(null=True, blank=True)
+    overall_square = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0.0)])
+    living_square = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0.0)])
+    kitchen_square = models.FloatField(null=True, blank=True, validators=[MinValueValidator(0.0)])
+    view = models.CharField(max_length=255, null=True, blank=True)
+    balcony = models.BooleanField(null=True, blank=True)
     city = models.ForeignKey(City, related_name='city', on_delete=models.CASCADE, blank=True, null=True)
     album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, blank=True, null=True)
 
