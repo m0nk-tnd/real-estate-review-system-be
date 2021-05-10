@@ -46,6 +46,9 @@ class City(AbstractCity):
     included_objects = EnabledObjectManager()
     objects = models.Manager()
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 connect_default_signals(City)
 

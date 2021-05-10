@@ -1,4 +1,4 @@
-from .models import Property
+from .models import Property, City
 from property.serializers import PropertySerializer
 from rest_framework import generics
 
@@ -9,6 +9,9 @@ class PropertyList(generics.ListCreateAPIView):
     filter_fields = ['landlord', 'name', 'address', 'city']
     ordering_fields = ['address', 'city']
     search_fields = ['city__name', 'city__country__name']
+
+    def perform_create(self, serializer):
+        serializer.save(city=City.objects.get(name='Saint Petersburg'))
 
 
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):

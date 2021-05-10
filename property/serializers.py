@@ -4,10 +4,11 @@ from users.models import LandlordProfile
 
 
 class PropertySerializer(serializers.ModelSerializer):
-    city = serializers.PrimaryKeyRelatedField(
-        queryset=City.objects.all(),
-        allow_null=True
-    )
+    # city = serializers.PrimaryKeyRelatedField(
+    #     queryset=City.objects.all(),
+    #     allow_null=True
+    # )
+    city = serializers.StringRelatedField()
 
     landlord = serializers.PrimaryKeyRelatedField(
         queryset=LandlordProfile.objects.all(),
