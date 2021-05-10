@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+from kombu import Queue, Exchange
 
 # loading environment variables
 load_dotenv()
@@ -165,6 +166,34 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# Celery stuff
+BROKER_URL = os.getenv('BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+# CELERY_MAX_TASKS_PER_CHILD = 1
+CELERY_IGNORE_RESULT = False
+CELERY_TRACK_STARTED = True
+
+# Celery queues
+CELERY_QUEUES = (
+    Queue('high', Exchange('high'), routing_key='high'),
+    Queue('normal', Exchange('normal'), routing_key='normal'),
+    Queue('low', Exchange('low'), routing_key='low'),
+)
+CELERY_DEFAULT_QUEUE = 'normal'
+CELERY_DEFAULT_EXCHANGE = 'normal'
+CELERY_DEFAULT_ROUTING_KEY = 'normal'
+CELERY_ROUTES = {
+    # -- HIGH PRIORITY QUEUE -- #
+    # -- NORMAL PRIORITY QUEUE -- #
+    'notifications.tasks.send_email': {'queue': 'high'},
+    # -- LOW PRIORITY QUEUE -- #
+}
 
 
 # Internationalization
