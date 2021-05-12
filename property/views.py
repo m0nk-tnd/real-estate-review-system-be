@@ -11,7 +11,7 @@ class PropertyList(generics.ListCreateAPIView):
     search_fields = ['city__name', 'city__country__name']
 
     def perform_create(self, serializer):
-        serializer.save(city=City.objects.get(name='Saint Petersburg'))
+        serializer.save(city=City.objects.get(name='Saint Petersburg'), landlord=self.request.user.landlordprofile)
 
 
 class PropertyDetail(generics.RetrieveUpdateDestroyAPIView):
