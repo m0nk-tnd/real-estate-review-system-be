@@ -16,16 +16,16 @@ class PropertySerializer(serializers.ModelSerializer):
     # )
 
     def validate(self, data):
-        if data['overall_floors'] and data['floor']:
+        if 'overall_floors' in data and data['overall_floors'] and 'floor' in data and data['floor']:
             if data['overall_floors'] < data['floor']:
                 raise serializers.ValidationError("Overall floors must be bigger or equal to floors")
-        if data['overall_square'] and data['living_square']:
+        if 'overall_square' in data and data['overall_square'] and 'living_square' in data and data['living_square']:
             if data['overall_square'] < data['living_square']:
                 raise serializers.ValidationError("Overall square must be bigger or equal to living square")
-        if data['overall_square'] and data['kitchen_square']:
+        if 'overall_square' in data and data['overall_square'] and 'kitchen_square' in data and data['kitchen_square']:
             if data['overall_square'] < data['kitchen_square']:
                 raise serializers.ValidationError("Overall square must be bigger than kitchen square")
-        if data['living_square'] and data['kitchen_square']:
+        if 'living_square' in data and data['living_square'] and 'kitchen_square' in data and data['kitchen_square']:
             if data['living_square'] < data['kitchen_square']:
                 raise serializers.ValidationError("Living square must be bigger or equal to kitchen square")
         return data
