@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth.models import User
 from rest_framework import status
+from rest_framework.test import APITestCase
 from django.test import TestCase, Client
 from django.urls import reverse
 from property.models import Property
@@ -34,11 +35,11 @@ class PropertyListTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class PropertyCreateTest(TestCase):
+class PropertyCreateTest(APITestCase):
     def setUp(self):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
-        self.user1.set_password('12345')
+        self.user1.set_password('Pas$w0rd')
         self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
@@ -47,14 +48,31 @@ class PropertyCreateTest(TestCase):
             'name': 'my prop',
             'address': 'spb',
             'city': self.city.pk,
-            'living_square': 40.6
+            'building_type': 'house',
+            'overall_floors': 14,
+            'floor': 2,
+            'decoration': False,
+            'overall_square': 200.8,
+            'living_square': 180.0,
+            'kitchen_square': 20.0,
+            'view': 'nice',
+            'balcony': True
         }
 
         self.invalid_form = {
             'landlord': self.landlord.pk,
             'name': '',
             'address': 'spb',
-            'city': self.city.pk
+            'city': self.city.pk,
+            'building_type': 'house',
+            'overall_floors': 14,
+            'floor': 2,
+            'decoration': False,
+            'overall_square': 200.8,
+            'living_square': 180.0,
+            'kitchen_square': 20.0,
+            'view': 'nice',
+            'balcony': True
         }
 
         self.invalid_form2 = {
@@ -62,11 +80,21 @@ class PropertyCreateTest(TestCase):
             'name': '',
             'address': 'spb',
             'city': self.city.pk,
-            'living_square': -0.5
+            'building_type': 'house',
+            'overall_floors': 14,
+            'floor': 2,
+            'decoration': False,
+            'overall_square': 200.8,
+            'living_square': 180.0,
+            'kitchen_square': -20.0,
+            'view': 'nice',
+            'balcony': True
         }
 
     def test_create_valid_property(self):
-        response = client.post(
+        self.client.force_authenticate(self.user1)
+        # self.assertTrue(self.client.login(username='anna123', password='Pas$w0rd'))
+        response = self.client.post(
             reverse('property:properties_list_create'),
             data=json.dumps(self.valid_form),
             content_type='application/json'
@@ -74,7 +102,8 @@ class PropertyCreateTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_create_invalid_property(self):
-        response = client.post(
+        self.client.force_authenticate(self.user1)
+        response = self.client.post(
             reverse('property:properties_list_create'),
             data=json.dumps(self.invalid_form),
             content_type='application/json'
@@ -82,7 +111,8 @@ class PropertyCreateTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_invalid_property_2(self):
-        response = client.post(
+        self.client.force_authenticate(self.user1)
+        response = self.client.post(
             reverse('property:properties_list_create'),
             data=json.dumps(self.invalid_form2),
             content_type='application/json'
@@ -115,7 +145,7 @@ class GetSinglePropertyTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
-class PropertyUpdateTest(TestCase):
+class PropertyUpdateTest(APITestCase):
     def setUp(self):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
@@ -130,8 +160,15 @@ class PropertyUpdateTest(TestCase):
             'name': 'my prop',
             'address': 'spb',
             'city': self.city.pk,
-            'balcony': True,
-            'overall_square': 0.0
+            'building_type': 'house',
+            'overall_floors': 14,
+            'floor': 2,
+            'decoration': False,
+            'overall_square': 200.8,
+            'living_square': 180.0,
+            'kitchen_square': 20.0,
+            'view': 'nice',
+            'balcony': True
         }
 
         self.invalid_form = {
@@ -139,12 +176,20 @@ class PropertyUpdateTest(TestCase):
             'name': '',
             'address': 'spb',
             'city': self.city.pk,
-            'balcony': True,
-            'overall_square': 0.0
+            'building_type': 'house',
+            'overall_floors': 14,
+            'floor': 2,
+            'decoration': False,
+            'overall_square': 200.8,
+            'living_square': 180.0,
+            'kitchen_square': -20.0,
+            'view': 'nice',
+            'balcony': True
         }
 
     def test_valid_update_property(self):
-        response = client.put(
+        self.client.force_authenticate(self.user1)
+        response = self.client.put(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}),
             data=json.dumps(self.valid_form),
             content_type='application/json'
@@ -154,14 +199,15 @@ class PropertyUpdateTest(TestCase):
         self.assertEqual(prop.name, 'my prop')
 
     def test_invalid_update_property(self):
-        response = client.put(
+        self.client.force_authenticate(self.user1)
+        response = self.client.put(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}),
             data=json.dumps(self.invalid_form),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class PropertyDeleteTest(TestCase):
+class PropertyDeleteTest(APITestCase):
     def setUp(self):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
@@ -173,6 +219,7 @@ class PropertyDeleteTest(TestCase):
                                                 city=self.city)
 
     def test_valid_delete_property(self):
+        self.client.force_authenticate(self.user1)
         self.assertEqual(Property.objects.all().count(), 1)
         response = client.delete(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}))
@@ -180,6 +227,7 @@ class PropertyDeleteTest(TestCase):
         self.assertEqual(Property.objects.all().count(), 0)
 
     def test_invalid_delete_property(self):
+        self.client.force_authenticate(self.user1)
         response = client.delete(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': 2}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
