@@ -14,6 +14,7 @@ from django.db import IntegrityError
 class ProfilesCreateTest(APITestCase):
     def setUp(self):
         self.client_ = User.objects.create_user(username='test_username', password='12345')
+        self.client.force_authenticate(user=self.client_)
         self.data_ = {
             'user': self.client_.pk,
             'firstname': 'Name',
@@ -40,6 +41,8 @@ class ProfilesListGetTest(APITestCase):
     def setUp(self) -> None:
         self.client1 = User.objects.create_user(username='testuser', password='12345')
         self.client2 = User.objects.create_user(username='testuser1', password='12345')
+        self.client.force_authenticate(user=self.client1)
+        self.client.force_authenticate(user=self.client2)
         self.tenant_profile = TenantProfile.objects.create(
             user=self.client1, firstname='Ivan', lastname='Ivanov',
             middlename='Ivanovich', birth_date='2000-07-15'
@@ -73,6 +76,9 @@ class ProfilesListGetTest(APITestCase):
 class ProfilesUpdateTest(APITestCase):
     fixtures = ['fixtures/users.json']
 
+    def setUp(self):
+        self.client.force_authenticate(user=User)
+
     def test_update_profiles(self) -> None:
         data_to_update = {'firstname': "Anton", 'middlename': 'Antonovich', 'birth_date': '1988-03-25'}
         response_tenant_profile = self.client.patch(reverse('users:retrieve-update-delete-tenant',
@@ -102,6 +108,9 @@ class ProfilesUpdateTest(APITestCase):
 class ProfilesDeleteTest(APITestCase):
     fixtures = ['fixtures/users.json']
 
+    def setUp(self):
+        self.client.force_authenticate(user=User)
+
     def test_delete_tenant_profile(self) -> None:
         tenants_count = TenantProfile.objects.all().count()
         landlord_count = LandlordProfile.objects.all().count()
@@ -118,6 +127,9 @@ class ProfilesDeleteTest(APITestCase):
 
 class ProfilesFilteringTest(APITestCase):
     fixtures = ['fixtures/users.json']
+
+    def setUp(self):
+        self.client.force_authenticate(user=User)
 
     def test_birth_date_range(self) -> None:
         date_from = '1982-01-01'

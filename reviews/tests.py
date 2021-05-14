@@ -15,6 +15,8 @@ class ReviewsTestCases(APITestCase):
     def setUp(self) -> None:
         self.client_ = User.objects.create_user(username='test', password='12345')
         self.client1_ = User.objects.create_user(username='test1', password='12345')
+        self.client.force_authenticate(self.client_)
+        self.client.force_authenticate(self.client1_)
         self.tenant_profile = TenantProfile.objects.create(
             user=self.client_,
             firstname='Tenant',
@@ -126,6 +128,9 @@ class ReviewsFilteringTest(APITestCase):
                 'fixtures/users.json',
                 'fixtures/property.json',
                 'fixtures/reviews.json']
+
+    def setUp(self):
+        self.client.force_authenticate(user=User)
 
     def test_rating_filter(self):
         response_review_on_tenant = self.client.get(reverse('reviews:list-create-tenant-review'), {'rating': 5})
