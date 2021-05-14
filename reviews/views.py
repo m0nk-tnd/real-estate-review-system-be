@@ -12,6 +12,7 @@ from .models import ReviewOnTenant, ReviewOnLandlordProperty
 class ReviewOnTenantListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewOnTenantListSerializer
     queryset = ReviewOnTenant.objects.all()
+    permission_classes = (IsAuthenticated,)
     filter_fields = ['title', 'rating']
     ordering_fields = ['rating']
     
@@ -25,6 +26,7 @@ class ReviewOnTenantDetailView(generics.RetrieveUpdateDestroyAPIView):
 class ReviewOnLandlordPropertyListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewOnLandlordPropertyListSerializer
     queryset = ReviewOnLandlordProperty.objects.all()
+    permission_classes = (IsAuthenticated,)
     filter_fields = ['title', 'rating']
     ordering_fields = ['rating']
 

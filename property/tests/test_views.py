@@ -4,17 +4,18 @@ import json
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from property.models import Property
 from property.factories import CityFactory
 from property.serializers import PropertySerializer
+from property.views import PropertyList
 from users.models import LandlordProfile
 
 client = Client()
 
 
-class PropertyListTest(TestCase):
+class PropertyListTest(APITestCase):
     def setUp(self):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
@@ -26,13 +27,15 @@ class PropertyListTest(TestCase):
                                                  city=self.city)
         self.property2 = Property.objects.create(landlord=self.landlord, name='my property2', address='my address2',
                                                  city=self.city)
+        self.client.force_authenticate(self.user1)
+        self.factory = RequestFactory()
 
     def test_get_all_properties(self):
-        response = client.get(reverse('property:properties_list_create'))
+        response = self.client.get(reverse('property:properties_list_create'))
         properties = Property.objects.all()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         serializer = PropertySerializer(properties, many=True)
         self.assertEqual(response.data['results'], serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class PropertyCreateTest(APITestCase):
@@ -120,11 +123,12 @@ class PropertyCreateTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-class GetSinglePropertyTest(TestCase):
+class GetSinglePropertyTest(APITestCase):
     def setUp(self):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
         self.user1.set_password('12345')
+        self.client.force_authenticate(self.user1)
         self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
@@ -132,7 +136,7 @@ class GetSinglePropertyTest(TestCase):
                                                 city=self.city)
 
     def test_get_valid_property(self):
-        response = client.get(
+        response = self.client.get(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}))
         prop = Property.objects.get(id=self.property.id)
         serializer = PropertySerializer(prop)
@@ -140,7 +144,7 @@ class GetSinglePropertyTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_invalid_property(self):
-        response = client.get(
+        response = self.client.get(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': 2}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -212,6 +216,7 @@ class PropertyDeleteTest(APITestCase):
         self.city = CityFactory()
         self.user1 = User.objects.create(username='anna123')
         self.user1.set_password('12345')
+        self.client.force_authenticate(self.user1)
         self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
@@ -219,15 +224,13 @@ class PropertyDeleteTest(APITestCase):
                                                 city=self.city)
 
     def test_valid_delete_property(self):
-        self.client.force_authenticate(self.user1)
         self.assertEqual(Property.objects.all().count(), 1)
-        response = client.delete(
+        response = self.client.delete(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': self.property.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Property.objects.all().count(), 0)
 
     def test_invalid_delete_property(self):
-        self.client.force_authenticate(self.user1)
-        response = client.delete(
+        response = self.client.delete(
             reverse('property:property_retrieve_update_delete', kwargs={'pk': 2}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
