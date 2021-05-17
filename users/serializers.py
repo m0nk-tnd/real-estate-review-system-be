@@ -63,6 +63,7 @@ class RegisterSerializer(serializers.Serializer):
                 middlename=self.validated_data['middlename'],
                 birth_date=self.validated_data['birth_date'],
             )
+        user_profile.save()
         return user_profile
 
 

@@ -19,7 +19,6 @@ def get_object_or_none(model, **kwargs):
 
 
 class LoginJWT(ObtainJSONWebToken):
-    user_serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
         data = {}
