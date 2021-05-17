@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'images',
     'rest_framework_jwt',
     'notifications',
+    'corsheaders',
 ]
 
 CITIES_LIGHT_APP_NAME = 'property'
@@ -109,6 +110,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'realestate.urls'
@@ -222,8 +224,9 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 JWT_AUTH = {
-
-    
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-
 }
+
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('CORS_ALLOWED_ORIGINS', default='http://127.0.0.1:9000')
+]
