@@ -1,10 +1,12 @@
 import datetime
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import User
 from django.test import TestCase
 from property.models import Property, City
 from property.factories import CityFactory
 from users.models import LandlordProfile
+from images.models import Image
 
 
 class PropertyModelTest(TestCase):
@@ -19,6 +21,11 @@ class PropertyModelTest(TestCase):
                                                 city=self.city, building_type='house', overall_floors=12, floor=4,
                                                 decoration=True, overall_square=400.8, living_square=301.2,
                                                 kitchen_square=30, view='nice', balcony=False)
+        self.img = SimpleUploadedFile(name='test_image.jpg',
+                                      content=b'',
+                                      content_type='image/jpeg')
+        self.image = Image.objects.create(name='my img', image=self.img)
+        self.property.images.add(self.image)
 
     def test_landlord_label(self):
         prop = Property.objects.get(id=self.property.id)
@@ -84,6 +91,11 @@ class PropertyModelTest(TestCase):
         prop = Property.objects.get(id=self.property.id)
         field_label = prop._meta.get_field('balcony').verbose_name
         self.assertEquals(field_label, 'balcony')
+
+    def test_images_label(self):
+        prop = Property.objects.get(id=self.property.id)
+        field_label = prop._meta.get_field('images').verbose_name
+        self.assertEquals(field_label, 'images')
 
     def test_name_max_length(self):
         prop = Property.objects.get(id=self.property.id)

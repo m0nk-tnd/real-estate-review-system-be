@@ -1,25 +1,10 @@
 [
 {
-  "model": "images.imagealbum",
-  "pk": 1,
-  "fields": {
-    "name": "Вилла"
-  }
-},
-{
-  "model": "images.imagealbum",
-  "pk": 2,
-  "fields": {
-    "name": "Дом"
-  }
-},
-{
   "model": "images.image",
   "pk": 1,
   "fields": {
     "name": "Вилла_1",
-    "image": "images/villa.jpg",
-    "album": 1
+    "image": "images/villa.jpg"
   }
 },
 {
@@ -27,8 +12,7 @@
   "pk": 2,
   "fields": {
     "name": "Дом",
-    "image": "images/house_1.jpg",
-    "album": 2
+    "image": "images/house_1.jpg"
   }
 },
 {
@@ -36,8 +20,7 @@
   "pk": 3,
   "fields": {
     "name": "Дом",
-    "image": "images/house_2.jpg",
-    "album": 2
+    "image": "images/house_2.jpg"
   }
 }
 ]

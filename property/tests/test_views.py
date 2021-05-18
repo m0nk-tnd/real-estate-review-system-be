@@ -11,6 +11,9 @@ from property.factories import CityFactory
 from property.serializers import PropertySerializer
 from property.views import PropertyList
 from users.models import LandlordProfile
+from images.models import Image
+from django.core.files.uploadedfile import SimpleUploadedFile
+
 
 client = Client()
 
@@ -46,6 +49,11 @@ class PropertyCreateTest(APITestCase):
         self.landlord = LandlordProfile.objects.create(user=self.user1, firstname='Anna',
                                                        lastname='Grigoreva', middlename='no',
                                                        birth_date=datetime.date(1999, 1, 18))
+        self.img = SimpleUploadedFile(name='test_image.jpg',
+                                      content=b'',
+                                      content_type='image/jpeg')
+        self.image = Image.objects.create(name='my img', image=self.img)
+
         self.valid_form = {
             'landlord': self.landlord.pk,
             'name': 'my prop',
@@ -91,12 +99,12 @@ class PropertyCreateTest(APITestCase):
             'living_square': 180.0,
             'kitchen_square': -20.0,
             'view': 'nice',
-            'balcony': True
+            'balcony': True,
+            "images": []
         }
 
     def test_create_valid_property(self):
         self.client.force_authenticate(self.user1)
-        # self.assertTrue(self.client.login(username='anna123', password='Pas$w0rd'))
         response = self.client.post(
             reverse('property:properties_list_create'),
             data=json.dumps(self.valid_form),
