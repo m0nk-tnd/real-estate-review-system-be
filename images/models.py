@@ -1,4 +1,5 @@
 from django.db import models
+from versatileimagefield.fields import VersatileImageField, PPOIField
 
 
 class ImageAlbum(models.Model):
@@ -7,14 +8,11 @@ class ImageAlbum(models.Model):
     def __str__(self):
         return f"{self.name}"
 
-    def get_images(self):
-        return self.images.all()
-
 
 class Image(models.Model):
     name = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='images/')
-    album = models.ForeignKey(ImageAlbum, related_name='images', on_delete=models.CASCADE)
+    image = VersatileImageField('Image', upload_to='images/', ppoi_field='image_ppoi', null=True, blank=True)
+    image_ppoi = PPOIField()
 
     def __str__(self):
-        return f"{self.name} | {self.album.name}"
+        return f"{self.name}"

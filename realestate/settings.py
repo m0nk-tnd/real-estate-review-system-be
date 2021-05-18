@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'images',
     'rest_framework_jwt',
     'notifications',
+    'versatileimagefield',
     'corsheaders',
 ]
 

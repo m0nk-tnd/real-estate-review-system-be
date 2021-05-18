@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/reviews/', include('reviews.urls')),
     path('api/v1/properties/', include('property.urls')),
+    path('api/v1/images/', include('images.urls')),
     path('api/v1/profiles/', include('users.urls')),
     path('api/v1/notifications/', include('notifications.urls')),
     path('api/v1/login/', LoginJWT.as_view()),
