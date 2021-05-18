@@ -4,7 +4,7 @@ from cities_light.abstract_models import (
     AbstractCity, AbstractRegion, AbstractCountry, AbstractSubRegion
 )
 from cities_light.receivers import connect_default_signals
-from images.models import ImageAlbum
+# from images.models import ImageAlbum
 from users.models import LandlordProfile
 from django.core.validators import MinValueValidator
 
@@ -69,7 +69,8 @@ class Property(models.Model):
     view = models.CharField(max_length=255, null=True, blank=True)
     balcony = models.BooleanField(null=True, blank=True)
     city = models.ForeignKey(City, related_name='city', on_delete=models.CASCADE, blank=True, null=True)
-    album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, blank=True, null=True)
+    # album = models.OneToOneField(ImageAlbum, related_name='model', on_delete=models.CASCADE, blank=True, null=True)
+    images = models.ManyToManyField('images.Image', related_name='properties', blank=True)
 
     def __str__(self):
         return f"{self.name} | {self.city}"

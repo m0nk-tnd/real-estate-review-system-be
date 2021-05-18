@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from .models import Image
+from .serializers import ImageSerializer
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+
+class ImageViewSet(generics.ListCreateAPIView):
+    serializer_class = ImageSerializer
+    queryset = Image.objects.all()
+    permission_classes = (IsAuthenticated,)
