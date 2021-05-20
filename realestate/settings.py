@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
+import datetime
 
 from dotenv import load_dotenv
 from kombu import Queue, Exchange
@@ -226,6 +227,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=10),
 }
 
 CORS_ALLOWED_ORIGINS = [
